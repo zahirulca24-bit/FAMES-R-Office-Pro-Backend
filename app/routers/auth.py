@@ -9,7 +9,13 @@ from app.db import get_db
 from app.deps import get_current_user
 from app.models import AuthAuditLog, AuthUser
 from app.schemas import ChangePasswordRequest, LoginRequest, LoginResponse, UserView
-from app.security import create_access_token, hash_password, password_needs_rehash, verify_password
+from app.security import (
+    create_access_token,
+    hash_password,
+    password_needs_rehash,
+    perform_dummy_password_check,
+    verify_password,
+)
 
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
@@ -22,7 +28,22 @@ def _client_ip(request: Request) -> str | None:
     return request.client.host if request.client else None
 
 
-def _audit(db: Session, request: Request, event_type: str, user: AuthUser | None = None, login_id: str | None = None, detail: str | None = None) -> None:
+def _as_utc(value: datetime | None) -> datetime | None:
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
+def _audit(
+    db: Session,
+    request: Request,
+    event_type: str,
+    user: AuthUser | None = None,
+    login_id: str | None = None,
+    detail: str | None = None,
+) -> None:
     db.add(
         AuthAuditLog(
             user_id=user.id if user else None,
@@ -38,11 +59,12 @@ def _audit(db: Session, request: Request, event_type: str, user: AuthUser | None
 @router.post("/login", response_model=LoginResponse)
 def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)) -> LoginResponse:
     settings = get_settings()
-    normalized = payload.login_id.strip().lower()
+    normalized = payload.login_id.lower()
     user = db.scalar(select(AuthUser).where(func.lower(AuthUser.login_id) == normalized))
 
     if user is None:
-        _audit(db, request, "LOGIN_FAILED", login_id=payload.login_id.strip(), detail="unknown_login_id")
+        perform_dummy_password_check(payload.password)
+        _audit(db, request, "LOGIN_FAILED", login_id=payload.login_id, detail="unknown_login_id")
         db.commit()
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid login ID or password")
 
@@ -52,7 +74,8 @@ def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)
         db.commit()
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is not active")
 
-    if user.locked_until and user.locked_until > now:
+    locked_until = _as_utc(user.locked_until)
+    if locked_until and locked_until > now:
         _audit(db, request, "LOGIN_BLOCKED", user=user, detail="temporary_lock")
         db.commit()
         raise HTTPException(status_code=status.HTTP_423_LOCKED, detail="Account temporarily locked. Try again later.")
@@ -76,6 +99,7 @@ def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)
         subject=user.id,
         login_id=user.login_id,
         role=user.role,
+        token_version=user.token_version,
         remember_me=payload.remember_me,
     )
     _audit(db, request, "LOGIN_SUCCESS", user=user)
@@ -96,7 +120,7 @@ def change_password(
     request: Request,
     user: AuthUser = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> dict[str, str]:
+) -> dict[str, str | bool]:
     if not verify_password(payload.current_password, user.password_hash):
         _audit(db, request, "PASSWORD_CHANGE_FAILED", user=user, detail="invalid_current_password")
         db.commit()
@@ -108,6 +132,7 @@ def change_password(
     user.password_hash = hash_password(payload.new_password)
     user.must_change_password = False
     user.password_changed_at = datetime.now(timezone.utc)
-    _audit(db, request, "PASSWORD_CHANGED", user=user)
+    user.token_version += 1
+    _audit(db, request, "PASSWORD_CHANGED", user=user, detail="all_existing_sessions_revoked")
     db.commit()
-    return {"message": "Password changed successfully"}
+    return {"message": "Password changed successfully", "reauthentication_required": True}

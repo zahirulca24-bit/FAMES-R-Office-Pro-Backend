@@ -5,10 +5,10 @@ services:
     plan: free
     region: singapore
     branch: main
-    autoDeploy: true
-    buildCommand: pip install -e .
+    autoDeploy: false
+    buildCommand: pip install -e . && alembic upgrade head
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /api/v1/health/ready
     envVars:
       - key: APP_ENV
         value: production
@@ -16,7 +16,13 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      - key: JWT_ISSUER
+        value: fames-r-office-pro
+      - key: JWT_AUDIENCE
+        value: fames-r-office-pro-frontend
       - key: CORS_ORIGINS
         value: https://fames-r-office-pro-frontend.vercel.app
+      - key: BOOTSTRAP_FORCE_RESET
+        value: "false"
       - key: PYTHON_VERSION
         value: 3.12.8

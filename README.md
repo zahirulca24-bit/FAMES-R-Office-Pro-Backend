@@ -13,24 +13,20 @@ FastAPI backend for FAMES & R Office PRO.
 - Render deployment
 - API prefix: `/api/v1`
 
-## Current Technical Setup
+## Batch 1 Stabilized Technical Setup
 
-The backend owns authentication directly. Supabase Auth is not used or required for login.
+- Frontend login contract preserved: `login_id`, `password`, `remember_me`
+- Argon2 password hashing and versioned JWT session revocation
+- Environment-only bootstrap credentials; no hardcoded runtime password
+- Targeted Super Admin emergency recovery only
+- Production configuration rejects SQLite, insecure JWT defaults, wildcard CORS, and localhost CORS
+- Alembic adoption migration for pre-existing auth tables
+- Process liveness: `GET /api/v1/health/live`
+- Database/schema/migration readiness: `GET /api/v1/health/ready`
+- Legacy health routes retained: `GET /health`, `GET /api/v1/health`
+- Supabase Auth is not used
 
-Existing documented capabilities:
-
-- Login ID + password authentication
-- Argon2 password hashing
-- JWT access tokens
-- `POST /api/v1/auth/login`
-- `GET /api/v1/auth/me`
-- `POST /api/v1/auth/change-password`
-- Failed-login lockout
-- Auth audit log
-- Super Admin user creation and account status controls
-- One-time environment-driven bootstrap script
-
-> This section preserves the existing technical setup only. It does not mark any roadmap batch as complete, tested, audited, or approved.
+> Batch 1 is READY FOR AUDIT, not approved. Live Render deployment and live PostgreSQL persistence were not executed in this batch.
 
 ## Local Run
 
@@ -39,29 +35,28 @@ python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e .[dev]
 cp .env.example .env
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-Health endpoints currently documented:
+## Bootstrap and Recovery
 
-- `/health`
-- `/api/v1/health`
-
-The locked roadmap requires dedicated live and ready checks to be implemented and verified during Batch 1.
-
-## Bootstrap First Users
-
-Set only the password environment variables required for bootstrap, then run:
+Normal bootstrap creates only missing configured users and never mutates an existing account:
 
 ```bash
 python -m scripts.bootstrap_users
 ```
 
-Passwords must never be stored in source code. Each bootstrapped account must be forced to change its temporary password after first login.
+Emergency recovery is restricted to one configured `SUPER_ADMIN`. Set `BOOTSTRAP_FORCE_RESET=true`, set `BOOTSTRAP_RECOVERY_LOGIN_ID`, and provide only that account password environment variable. Remove or disable the recovery variables immediately after the single recovery run.
 
-## Production Requirements
+Passwords, tokens, database credentials, and production secrets must never be committed.
 
-Set a PostgreSQL `DATABASE_URL`, a strong random `JWT_SECRET`, and the allowed frontend origin or origins. Do not commit `.env`, passwords, tokens, database credentials, or production secrets.
+## Batch 1 Evidence Files
+
+- `IMPLEMENTATION_REPORT.md`
+- `TEST_REPORT.md`
+- `API_CONTRACT.md`
+- `MIGRATION_LIST.md`
 
 ---
 
@@ -69,15 +64,11 @@ Set a PostgreSQL `DATABASE_URL`, a strong random `JWT_SECRET`, and the allowed f
 
 This is the locked implementation and approval plan for the FAMES & R Office PRO backend.
 
-No backend implementation batch may begin until the project owner gives the required written instruction. Batch 1 must not start until the project owner explicitly says:
-
-`START BATCH 1`
-
 ## README Control Table
 
 | Batch | Name | Status | Progress | Audit Result | Approved By |
 |------|------|------|------:|------|------|
-| 1 | Recovery & Stabilization | IN PROGRESS | 0% | Pending | Pending |
+| 1 | Recovery & Stabilization | READY FOR AUDIT | 95% | Pending | Pending |
 | 2 | Users, RBAC & Clients | NOT STARTED | 0% | Pending | Pending |
 | 3 | Jobs & Engagements | NOT STARTED | 0% | Pending | Pending |
 | 4 | Work Station | NOT STARTED | 0% | Pending | Pending |
@@ -125,7 +116,7 @@ A backend engineer or implementation agent must not mark a batch `APPROVED`. Onl
 - Required tests executed
 - Independent audit approved
 
-**Current status:** `IN PROGRESS`
+**Current status:** `READY FOR AUDIT`
 
 ---
 
@@ -381,33 +372,20 @@ Module-level proof is also mandatory for:
 
 ## Backend Batch Change Log
 
-For every batch change, use this format without inventing history:
-
-### Batch X — Date
-
-- Status before:
-- Status after:
-- Commit/ZIP:
-- Features completed:
-- Tests executed:
-- Audit result:
-- Remaining blockers:
-- Approved by:
-
 ### Roadmap Initialization
 
 - Added controlled 8-batch backend roadmap
 - No backend code changed
-- All batches remain `NOT STARTED`
-- Awaiting project owner approval to start Batch 1
+- All batches remained `NOT STARTED`
+- Awaited project owner approval to start Batch 1
 
 ### Batch 1 — July 19, 2026
 
 - Status before: `NOT STARTED`
-- Status after: `IN PROGRESS`
-- Commit/ZIP: README status-start commit; backend ZIP pending
-- Features completed: None; implementation has not started
-- Tests executed: None
-- Audit result: Pending
-- Remaining blockers: Batch 1 implementation, test execution, evidence collection, and independent audit
+- Status after: `READY FOR AUDIT`
+- Commit/ZIP: branch `batch-1-recovery-stabilization`; clean ZIP `FAMES-R-Office-Pro-Backend-Batch-1-READY-FOR-AUDIT.zip`; final commit SHA supplied with delivery
+- Features completed: recovery and bootstrap stabilization, frontend auth contract preservation, password/session security, production configuration validation, Alembic adoption baseline, live/ready health checks, foundational RBAC hardening, clean backend packaging, and evidence documentation
+- Tests executed: clean editable install, dependency check, 20 automated tests, Python compilation, SQLite migration upgrade/current verification, legacy database adoption test, PostgreSQL offline migration compilation, API route inventory, secret/junk scan, and ZIP manifest verification
+- Audit result: Pending independent audit
+- Remaining blockers: independent audit approval; live PostgreSQL persistence and Render deployment were not executed; Client and Job modules do not yet exist and remain locked to Batches 2 and 3
 - Approved by: Pending

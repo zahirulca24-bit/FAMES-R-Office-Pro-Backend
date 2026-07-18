@@ -1,7 +1,41 @@
+# Python caches and tooling
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environments and secrets
 .venv/
+venv/
+env/
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+
+# Local databases and logs
 *.db
+*.sqlite
 *.sqlite3
+*.log
+
+# Build/package output
+build/
+dist/
+*.egg-info/
+
+# Frontend/generated junk must never enter backend packages
+node_modules/
+frontend/
+*.zip
+*.tar
+*.tar.gz
+.DS_Store
+Thumbs.db

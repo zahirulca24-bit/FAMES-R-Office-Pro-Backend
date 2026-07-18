@@ -25,10 +25,21 @@ def get_current_user(
     user = db.get(AuthUser, str(payload.get("sub", "")))
     if user is None or user.status != "ACTIVE":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Account is not active")
+    if int(payload.get("ver", -1)) != user.token_version:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session is no longer valid")
     return user
 
 
-def require_super_admin(user: AuthUser = Depends(get_current_user)) -> AuthUser:
+def require_password_changed(user: AuthUser = Depends(get_current_user)) -> AuthUser:
+    if user.must_change_password:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Password change required before accessing this operation",
+        )
+    return user
+
+
+def require_super_admin(user: AuthUser = Depends(require_password_changed)) -> AuthUser:
     if user.role != "SUPER_ADMIN":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Super Admin access required")
     return user
