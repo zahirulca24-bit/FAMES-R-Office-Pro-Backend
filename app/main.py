@@ -13,9 +13,8 @@ from app.routers.auth import router as auth_router
 def _run_startup_bootstrap() -> None:
     """Create/update bootstrap users only when a bootstrap password is explicitly set.
 
-    This keeps free-tier Render deployments shell-free. Remove the bootstrap
-    environment variable after the first successful deployment so passwords
-    are not reset on later restarts.
+    Bootstrap failures must never take the API offline. Remove bootstrap password
+    environment variables after the intended account has been created successfully.
     """
     if not any(
         key.startswith("BOOTSTRAP_") and key.endswith("_PASSWORD") and value
@@ -23,9 +22,12 @@ def _run_startup_bootstrap() -> None:
     ):
         return
 
-    from scripts.bootstrap_users import main as bootstrap_users
+    try:
+        from scripts.bootstrap_users import main as bootstrap_users
 
-    bootstrap_users()
+        bootstrap_users()
+    except Exception as exc:
+        print(f"STARTUP BOOTSTRAP ERROR: {type(exc).__name__}: {exc}")
 
 
 @asynccontextmanager
