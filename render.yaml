@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: fames-r-office-pro-backend
+    runtime: python
+    plan: free
+    region: singapore
+    branch: main
+    autoDeploy: true
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://fames-r-office-pro-frontend.vercel.app
+      - key: PYTHON_VERSION
+        value: 3.12.8
