@@ -27,21 +27,37 @@ def main() -> None:
             if not password:
                 print(f"SKIP {login_id}: {password_env} is not set")
                 continue
+            if len(password) < 10:
+                print(f"SKIP {login_id}: {password_env} must be at least 10 characters")
+                continue
 
-            user = db.scalar(select(AuthUser).where(func.lower(AuthUser.login_id) == login_id.lower()))
-            if user is None:
-                user = AuthUser(login_id=login_id, email=email, full_name=full_name, role=role, password_hash=hash_password(password), status=status, must_change_password=True)
-                db.add(user)
-                print(f"CREATE {login_id}")
-            else:
-                user.email = email
-                user.full_name = full_name
-                user.role = role
-                user.password_hash = hash_password(password)
-                user.status = status
-                user.must_change_password = True
-                print(f"UPDATE {login_id}")
-        db.commit()
+            try:
+                user = db.scalar(select(AuthUser).where(func.lower(AuthUser.login_id) == login_id.lower()))
+                password_hash = hash_password(password)
+                if user is None:
+                    user = AuthUser(
+                        login_id=login_id,
+                        email=email,
+                        full_name=full_name,
+                        role=role,
+                        password_hash=password_hash,
+                        status=status,
+                        must_change_password=True,
+                    )
+                    db.add(user)
+                    print(f"CREATE {login_id}")
+                else:
+                    user.email = email
+                    user.full_name = full_name
+                    user.role = role
+                    user.password_hash = password_hash
+                    user.status = status
+                    user.must_change_password = True
+                    print(f"UPDATE {login_id}")
+                db.commit()
+            except Exception as exc:
+                db.rollback()
+                print(f"BOOTSTRAP ERROR {login_id}: {type(exc).__name__}: {exc}")
 
 
 if __name__ == "__main__":
