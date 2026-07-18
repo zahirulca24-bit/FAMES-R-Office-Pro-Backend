@@ -19,8 +19,19 @@ USERS = [
 ]
 
 
+def _env_flag(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 def main() -> None:
+    """Create missing bootstrap users without resetting existing passwords.
+
+    Set BOOTSTRAP_FORCE_RESET=true only for an intentional no-shell recovery.
+    After recovery succeeds, remove/disable BOOTSTRAP_FORCE_RESET again.
+    """
     Base.metadata.create_all(bind=engine)
+    force_reset = _env_flag("BOOTSTRAP_FORCE_RESET")
+
     with SessionLocal() as db:
         for login_id, email, full_name, role, password_env, status in USERS:
             password = os.getenv(password_env)
@@ -33,27 +44,36 @@ def main() -> None:
 
             try:
                 user = db.scalar(select(AuthUser).where(func.lower(AuthUser.login_id) == login_id.lower()))
-                password_hash = hash_password(password)
+
                 if user is None:
                     user = AuthUser(
                         login_id=login_id,
                         email=email,
                         full_name=full_name,
                         role=role,
-                        password_hash=password_hash,
+                        password_hash=hash_password(password),
                         status=status,
                         must_change_password=True,
                     )
                     db.add(user)
                     print(f"CREATE {login_id}")
                 else:
+                    # Keep identity metadata synchronized, but never rotate a working
+                    # password merely because Render restarted or redeployed.
                     user.email = email
                     user.full_name = full_name
                     user.role = role
-                    user.password_hash = password_hash
                     user.status = status
-                    user.must_change_password = True
-                    print(f"UPDATE {login_id}")
+
+                    if force_reset:
+                        user.password_hash = hash_password(password)
+                        user.failed_login_count = 0
+                        user.locked_until = None
+                        user.must_change_password = True
+                        print(f"RECOVER {login_id}")
+                    else:
+                        print(f"KEEP {login_id}: existing password preserved")
+
                 db.commit()
             except Exception as exc:
                 db.rollback()
