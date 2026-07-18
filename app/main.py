@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,9 +10,28 @@ from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 
 
+def _run_startup_bootstrap() -> None:
+    """Create/update bootstrap users only when a bootstrap password is explicitly set.
+
+    This keeps free-tier Render deployments shell-free. Remove the bootstrap
+    environment variable after the first successful deployment so passwords
+    are not reset on later restarts.
+    """
+    if not any(
+        key.startswith("BOOTSTRAP_") and key.endswith("_PASSWORD") and value
+        for key, value in os.environ.items()
+    ):
+        return
+
+    from scripts.bootstrap_users import main as bootstrap_users
+
+    bootstrap_users()
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    _run_startup_bootstrap()
     yield
 
 
