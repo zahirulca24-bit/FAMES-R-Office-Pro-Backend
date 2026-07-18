@@ -77,7 +77,7 @@ No backend implementation batch may begin until the project owner gives the requ
 
 | Batch | Name | Status | Progress | Audit Result | Approved By |
 |------|------|------|------:|------|------|
-| 1 | Recovery & Stabilization | NOT STARTED | 0% | Pending | Pending |
+| 1 | Recovery & Stabilization | IN PROGRESS | 0% | Pending | Pending |
 | 2 | Users, RBAC & Clients | NOT STARTED | 0% | Pending | Pending |
 | 3 | Jobs & Engagements | NOT STARTED | 0% | Pending | Pending |
 | 4 | Work Station | NOT STARTED | 0% | Pending | Pending |
@@ -125,7 +125,7 @@ A backend engineer or implementation agent must not mark a batch `APPROVED`. Onl
 - Required tests executed
 - Independent audit approved
 
-**Initial status:** `NOT STARTED`
+**Current status:** `IN PROGRESS`
 
 ---
 
@@ -400,3 +400,14 @@ For every batch change, use this format without inventing history:
 - No backend code changed
 - All batches remain `NOT STARTED`
 - Awaiting project owner approval to start Batch 1
+
+### Batch 1 — July 19, 2026
+
+- Status before: `NOT STARTED`
+- Status after: `IN PROGRESS`
+- Commit/ZIP: README status-start commit; backend ZIP pending
+- Features completed: None; implementation has not started
+- Tests executed: None
+- Audit result: Pending
+- Remaining blockers: Batch 1 implementation, test execution, evidence collection, and independent audit
+- Approved by: Pending
