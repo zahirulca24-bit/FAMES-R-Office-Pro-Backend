@@ -2,6 +2,78 @@
 
 FastAPI backend for FAMES & R Office PRO.
 
+## Architecture & Infrastructure Lock
+
+**Last updated:** 20 July 2026, 11:03 AM BDT (Asia/Dhaka)
+
+The approved application infrastructure is:
+
+- Frontend hosting: Vercel
+- Backend API hosting: Render
+- Primary relational database: PostgreSQL
+- Document storage: Google Drive through the Google Drive API
+- AI provider: Google Gemini API
+- Authentication: Custom FastAPI JWT authentication
+- API prefix: `/api/v1`
+
+```text
+Frontend (Vercel)
+        |
+        v
+Backend API (Render)
+        |-- PostgreSQL: structured application data
+        |-- Google Drive API: documents and working files
+        `-- Google Gemini API: controlled AI assistance
+```
+
+### PostgreSQL Storage Policy
+
+PostgreSQL is the system of record for structured application data, including:
+
+- Users, roles, permissions, and account status
+- Staff and student profiles
+- Departments and designations
+- Clients, contacts, services, notes, and activity
+- Jobs, engagements, assignments, tasks, deadlines, and status history
+- Attendance, leave, work logs, and performance data
+- Audit planning, risk, materiality, requisitions, review notes, and workflow records
+- Notifications, activity logs, audit logs, and document metadata
+- Google Drive file IDs, folder IDs, versions, ownership, and linked client or engagement references
+- Controlled AI request metadata and audit history where retention is approved
+
+PDF, Excel, Word, image, scan, and other binary documents must not be stored directly in PostgreSQL. These files belong in Google Drive; PostgreSQL stores only their metadata and relationships.
+
+### Google Drive Storage Policy
+
+Google Drive stores the actual office and client files, including:
+
+- Client documents
+- Audit working papers
+- Financial statements
+- Tax and VAT files
+- PDF, Excel, and Word files
+- Scanned documents and supporting evidence
+- Generated reports approved for storage
+
+Drive operations must be performed only through authenticated backend APIs. The frontend must not receive Google service-account credentials or unrestricted Drive credentials.
+
+### Secret and API-Key Policy
+
+The following secrets must be stored only in Render environment variables or an approved secret manager:
+
+- PostgreSQL `DATABASE_URL`
+- `JWT_SECRET`
+- Google Drive credentials
+- Google Gemini API key
+- Production bootstrap credentials
+- Email or other third-party service credentials
+
+Gemini and Google Drive credentials must never be committed to GitHub, embedded in frontend code, or exposed through Vercel public environment variables. The frontend calls the FastAPI backend; the backend calls PostgreSQL, Google Drive, and Gemini.
+
+### Current Development Direction
+
+Authentication is treated as stable and must not be changed without a verified defect and regression proof. Development proceeds backend-first using the controlled batch roadmap below. Staff and student functionality remains part of Batch 7 under the locked sequence; it must not bypass unfinished prerequisite batches unless the project owner explicitly authorizes a roadmap change.
+
 ## Backend Technology Baseline
 
 - Python FastAPI
@@ -411,3 +483,12 @@ For every batch change, use this format without inventing history:
 - Audit result: Pending
 - Remaining blockers: Batch 1 implementation, test execution, evidence collection, and independent audit
 - Approved by: Pending
+
+### Architecture Lock — July 20, 2026, 11:03 AM BDT
+
+- Locked Vercel as frontend hosting and Render as backend hosting.
+- Locked PostgreSQL as the structured-data system of record.
+- Locked Google Drive API for actual document storage; PostgreSQL stores document metadata only.
+- Locked Google Gemini API behind the FastAPI backend.
+- Confirmed that Gemini, Drive, database, and JWT secrets must remain backend-only environment variables.
+- No application code, authentication behavior, database migration, or deployment configuration changed in this documentation commit.
