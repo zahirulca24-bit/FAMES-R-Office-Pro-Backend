@@ -4,14 +4,14 @@ FastAPI backend for FAMES & R Office PRO.
 
 ## Architecture & Infrastructure Lock
 
-**Last updated:** 20 July 2026, 11:03 AM BDT (Asia/Dhaka)
+**Last updated:** 20 July 2026, 11:13 AM BDT (Asia/Dhaka)
 
-The approved application infrastructure is:
+Approved infrastructure:
 
 - Frontend hosting: Vercel
 - Backend API hosting: Render
-- Primary relational database: PostgreSQL
-- Document storage: Google Drive through the Google Drive API
+- Primary database: PostgreSQL
+- Document storage: Google Drive API
 - AI provider: Google Gemini API
 - Authentication: Custom FastAPI JWT authentication
 - API prefix: `/api/v1`
@@ -26,26 +26,28 @@ Backend API (Render)
         `-- Google Gemini API: controlled AI assistance
 ```
 
-### PostgreSQL Storage Policy
+## Storage Policy
 
-PostgreSQL is the system of record for structured application data, including:
+### PostgreSQL
+
+PostgreSQL is the system of record for structured application data:
 
 - Users, roles, permissions, and account status
-- Staff and student profiles
+- Staff and article-student profiles
 - Departments and designations
 - Clients, contacts, services, notes, and activity
 - Jobs, engagements, assignments, tasks, deadlines, and status history
-- Attendance, leave, work logs, and performance data
+- Attendance, leave, work logs, timesheets, and performance data
 - Audit planning, risk, materiality, requisitions, review notes, and workflow records
 - Notifications, activity logs, audit logs, and document metadata
-- Google Drive file IDs, folder IDs, versions, ownership, and linked client or engagement references
-- Controlled AI request metadata and audit history where retention is approved
+- Google Drive file IDs, folder IDs, versions, ownership, and linked records
+- Controlled AI request metadata and approved audit history
 
-PDF, Excel, Word, image, scan, and other binary documents must not be stored directly in PostgreSQL. These files belong in Google Drive; PostgreSQL stores only their metadata and relationships.
+PDF, Excel, Word, image, scan, and other binary files must not be stored directly in PostgreSQL.
 
-### Google Drive Storage Policy
+### Google Drive
 
-Google Drive stores the actual office and client files, including:
+Google Drive stores the actual files:
 
 - Client documents
 - Audit working papers
@@ -53,26 +55,38 @@ Google Drive stores the actual office and client files, including:
 - Tax and VAT files
 - PDF, Excel, and Word files
 - Scanned documents and supporting evidence
-- Generated reports approved for storage
+- Approved generated reports
 
-Drive operations must be performed only through authenticated backend APIs. The frontend must not receive Google service-account credentials or unrestricted Drive credentials.
+The backend performs all Drive operations. The frontend must never receive Google service-account credentials or unrestricted Drive credentials.
 
-### Secret and API-Key Policy
+## Secret and API-Key Policy
 
-The following secrets must be stored only in Render environment variables or an approved secret manager:
+These secrets must stay only in Render environment variables or an approved secret manager:
 
 - PostgreSQL `DATABASE_URL`
 - `JWT_SECRET`
 - Google Drive credentials
 - Google Gemini API key
 - Production bootstrap credentials
-- Email or other third-party service credentials
+- Email and other third-party credentials
 
-Gemini and Google Drive credentials must never be committed to GitHub, embedded in frontend code, or exposed through Vercel public environment variables. The frontend calls the FastAPI backend; the backend calls PostgreSQL, Google Drive, and Gemini.
+Secrets must never be committed to GitHub, embedded in frontend code, or exposed through public Vercel environment variables.
 
-### Current Development Direction
+## Authentication Protection Rule
 
-Authentication is treated as stable and must not be changed without a verified defect and regression proof. Development proceeds backend-first using the controlled batch roadmap below. Staff and student functionality remains part of Batch 7 under the locked sequence; it must not bypass unfinished prerequisite batches unless the project owner explicitly authorizes a roadmap change.
+Login is currently treated as working and stable.
+
+- Do not redesign or replace authentication without a verified defect.
+- Preserve the locked FastAPI JWT contract.
+- Any auth change requires regression proof for login, profile, refresh, logout, protected-route rejection, and re-login.
+- Never remove or disable the owner's access without a tested recovery path.
+- Never claim authentication is fixed without live evidence.
+
+Locked endpoints:
+
+- `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
+- `POST /api/v1/auth/change-password`
 
 ## Backend Technology Baseline
 
@@ -81,28 +95,10 @@ Authentication is treated as stable and must not be changed without a verified d
 - SQLAlchemy
 - Alembic
 - Custom JWT authentication
+- Argon2 password hashing
 - Server-side RBAC
 - Render deployment
 - API prefix: `/api/v1`
-
-## Current Technical Setup
-
-The backend owns authentication directly. Supabase Auth is not used or required for login.
-
-Existing documented capabilities:
-
-- Login ID + password authentication
-- Argon2 password hashing
-- JWT access tokens
-- `POST /api/v1/auth/login`
-- `GET /api/v1/auth/me`
-- `POST /api/v1/auth/change-password`
-- Failed-login lockout
-- Auth audit log
-- Super Admin user creation and account status controls
-- One-time environment-driven bootstrap script
-
-> This section preserves the existing technical setup only. It does not mark any roadmap batch as complete, tested, audited, or approved.
 
 ## Local Run
 
@@ -114,51 +110,30 @@ cp .env.example .env
 uvicorn app.main:app --reload
 ```
 
-Health endpoints currently documented:
-
-- `/health`
-- `/api/v1/health`
-
-The locked roadmap requires dedicated live and ready checks to be implemented and verified during Batch 1.
-
-## Bootstrap First Users
-
-Set only the password environment variables required for bootstrap, then run:
-
-```bash
-python -m scripts.bootstrap_users
-```
-
-Passwords must never be stored in source code. Each bootstrapped account must be forced to change its temporary password after first login.
-
-## Production Requirements
-
-Set a PostgreSQL `DATABASE_URL`, a strong random `JWT_SECRET`, and the allowed frontend origin or origins. Do not commit `.env`, passwords, tokens, database credentials, or production secrets.
-
 ---
 
-# Backend Master Roadmap — 8 Controlled Batches
+# FAMES & R Office PRO — 12-Phase Master Roadmap
 
-This is the locked implementation and approval plan for the FAMES & R Office PRO backend.
+This roadmap is the approved review version for backend-first implementation. Only one phase may be active at a time unless the project owner explicitly authorizes non-conflicting parallel work.
 
-No backend implementation batch may begin until the project owner gives the required written instruction. Batch 1 must not start until the project owner explicitly says:
+## Roadmap Control Table
 
-`START BATCH 1`
+| Phase | Name | Status | Progress | Audit Result | Approved By |
+|---|---|---|---:|---|---|
+| 1 | Backend Stabilization | IN PROGRESS | 0% | Pending | Pending |
+| 2 | Users, Staff & Students Foundation | NOT STARTED | 0% | Pending | Pending |
+| 3 | Client Management | NOT STARTED | 0% | Pending | Pending |
+| 4 | Engagement & Job Management | NOT STARTED | 0% | Pending | Pending |
+| 5 | Staff Operations | NOT STARTED | 0% | Pending | Pending |
+| 6 | Job Work Station | NOT STARTED | 0% | Pending | Pending |
+| 7 | Audit Workflow | NOT STARTED | 0% | Pending | Pending |
+| 8 | Google Drive Document Management | NOT STARTED | 0% | Pending | Pending |
+| 9 | Notifications & Communication | NOT STARTED | 0% | Pending | Pending |
+| 10 | Gemini AI Assistant | NOT STARTED | 0% | Pending | Pending |
+| 11 | Dashboard & Reports | NOT STARTED | 0% | Pending | Pending |
+| 12 | Production Hardening | NOT STARTED | 0% | Pending | Pending |
 
-## README Control Table
-
-| Batch | Name | Status | Progress | Audit Result | Approved By |
-|------|------|------|------:|------|------|
-| 1 | Recovery & Stabilization | IN PROGRESS | 0% | Pending | Pending |
-| 2 | Users, RBAC & Clients | NOT STARTED | 0% | Pending | Pending |
-| 3 | Jobs & Engagements | NOT STARTED | 0% | Pending | Pending |
-| 4 | Work Station | NOT STARTED | 0% | Pending | Pending |
-| 5 | Audit Engine | NOT STARTED | 0% | Pending | Pending |
-| 6 | Drive & Communication | NOT STARTED | 0% | Pending | Pending |
-| 7 | Staff, Notifications & AI | NOT STARTED | 0% | Pending | Pending |
-| 8 | Production Hardening & E2E | NOT STARTED | 0% | Pending | Pending |
-
-### Allowed Status Values
+Allowed status values:
 
 - `NOT STARTED`
 - `IN PROGRESS`
@@ -167,328 +142,395 @@ No backend implementation batch may begin until the project owner gives the requ
 - `CORRECTION REQUIRED`
 - `APPROVED`
 
-A backend engineer or implementation agent must not mark a batch `APPROVED`. Only the project owner or an independent auditor may approve a batch.
+Only the project owner or an independent auditor may mark a phase `APPROVED`.
 
 ---
 
-## Batch 1 — Recovery & Stabilization
+## Phase 1 — Backend Stabilization
 
 ### Scope
 
-- Clean backend package
-- Remove frontend files, `venv`, `node_modules`, nested ZIPs, caches, and secrets
-- Preserve current working backend functionality
-- Fix frontend authentication API contract
-- Fix password-reset security
-- Stabilize Admin bootstrap and recovery
-- Verify PostgreSQL and Alembic
-- Correct unsafe CORS and configuration
-- Add `health/live` and `health/ready`
-- Fix foundational RBAC security
-- Run Auth, RBAC, Client, and Job regression tests
+- Preserve the current working login/auth flow
+- Verify PostgreSQL connectivity and persistence
+- Verify Alembic migrations
+- Validate CORS and production environment configuration
+- Implement and verify `/health/live` and `/health/ready`
+- Verify backup-admin and account-recovery procedures
+- Review password-reset security
+- Review foundational RBAC enforcement
+- Run auth, RBAC, client, and database regression tests
+- Remove secrets, caches, nested ZIPs, virtual environments, and generated junk
 
 ### Exit Criteria
 
-- Clean backend-only ZIP
-- Current frontend login contract preserved
-- No hardcoded password
-- No insecure production defaults
-- Database persistence verified
-- Required tests executed
+- Current login remains working
+- PostgreSQL persistence is proven
+- Migration upgrade and rollback behavior is documented
+- No insecure production defaults remain
+- Recovery access is proven
+- Required regression tests pass with evidence
 - Independent audit approved
-
-**Current status:** `IN PROGRESS`
 
 ---
 
-## Batch 2 — Users, RBAC & Clients Completion
+## Phase 2 — Users, Staff & Students Foundation
 
 ### Scope
 
-- Complete user lifecycle management
-- Roles
-- Permissions
-- Role-permission mapping
-- Permission overrides
-- Status controls
+- User account lifecycle
+- Roles and permissions
+- Role-permission mapping and overrides
+- Staff profiles
+- Article-student profiles
+- Departments
+- Designations
+- Student batch or intake
+- Manager and senior assignment
+- Active and inactive status
+- Unique employee and student IDs
+- Basic activity log
 - Last-active-Super-Admin protection
-- Admin password reset
+
+### Exit Criteria
+
+- Users, staff, and students persist in PostgreSQL
+- Server-side permissions are enforced
+- Owner access cannot be accidentally removed
+- Search, filtering, pagination, and validation work
+- Independent audit approved
+
+---
+
+## Phase 3 — Client Management
+
+### Scope
+
 - Client master
-- Client contacts
-- Client services
-- Client notes
-- Client activity
+- Contact persons
+- Service types
+- TIN, BIN, and RJSC information
+- Client status
+- Notes and confidentiality controls
+- Client activity history
 - Client 360 APIs
-- Confidentiality controls
+- Search, filtering, and pagination
 
 ### Exit Criteria
 
-- User and RBAC APIs complete
-- Client APIs persistent
-- Server-side permissions enforced
-- Role-separation policy tested
+- Client data persists across refresh and deployment
+- Confidential data follows role and assignment rules
+- Client history and relationships are traceable
 - Independent audit approved
-
-**Initial status:** `NOT STARTED`
 
 ---
 
-## Batch 3 — Jobs & Engagements
+## Phase 4 — Engagement & Job Management
 
 ### Scope
 
-- Engagements
-- Jobs
-- Job assignments
+- Audit, Tax, VAT, and other engagement creation
+- Financial year and reporting period
+- Jobs and job assignments
+- Staff and student team assignment
+- Tasks and deadlines
+- Budget hours
+- Progress and controlled status workflow
+- Status history and activity logs
+- Search, filtering, and pagination
+- Row-level and assignment-based access
+
+### Exit Criteria
+
+- Engagement and job lifecycle is persistent
+- Invalid status transitions are blocked
+- Team and assignment access rules are proven
+- Student and technical-role restrictions are tested
+- Independent audit approved
+
+---
+
+## Phase 5 — Staff Operations
+
+### Scope
+
+- Attendance
+- Leave request and approval
+- Daily work logs
+- Timesheets
+- Billable and non-billable hours
+- Workload tracking
+- Performance reviews
+- Student training progress
+- Competency checklist
+- Salary and allowance foundation
+
+### Exit Criteria
+
+- Staff operations use persistent APIs
+- Approval rules are enforced server-side
+- Timesheet and workload totals are reproducible
+- No simulated payroll or attendance success remains
+- Independent audit approved
+
+---
+
+## Phase 6 — Job Work Station
+
+Each engagement receives a controlled workspace containing:
+
+- Overview
 - Tasks
-- Deadlines
-- Status workflow
-- Status history
-- Activity logs
-- Search, filter, and pagination
-- Job overview
-- Row-level access
-
-### Exit Criteria
-
-- Job lifecycle persistent
-- Valid transitions enforced
-- Assignment access tested
-- Student and technical-role restrictions proven
-- Independent audit approved
-
-**Initial status:** `NOT STARTED`
-
----
-
-## Batch 4 — Work Station
-
-### Scope
-
-- Job Work Station overview
-- Work Station sections
 - Requisitions
-- Requisition items
-- Document metadata
+- Documents
 - Working papers
-- Working-paper version history
 - Review notes
 - Internal discussion
 - Client message drafts
-- Work Station activity
-- Safe AI-context foundation only
+- Activity log
 
 ### Exit Criteria
 
-- Work Station APIs complete
-- No fake uploads
-- No fake email sending
-- Review and approval restrictions enforced
+- Every visible action maps to a real backend endpoint or is explicitly disabled
+- Work Station data persists
+- Internal and client-facing communications remain separated
+- Review and approval restrictions are enforced
+- No fake upload or fake send success exists
 - Independent audit approved
-
-**Initial status:** `NOT STARTED`
 
 ---
 
-## Batch 5 — Audit Engine
+## Phase 7 — Audit Workflow
 
 ### Scope
 
-- Audit planning
 - Client acceptance
 - Independence
 - Engagement letter
+- Audit planning
 - Materiality
 - Risk assessment
 - Audit strategy
 - Audit programme
 - Substantive procedures
-- Working-paper review
-- Review issues
+- Working-paper preparation
+- Review and clearance
 - Finalization
-- Professional sign-off rules
+- Partner sign-off controls
 
 ### Exit Criteria
 
-- Audit workflow persistent
-- Professional authority separated from technical admin
-- Review and finalization controls tested
+- Audit workflow is persistent and versioned
+- Professional authority is separated from technical administration
+- Review history and finalization evidence are retained
+- Local-only approval and sign-off are prohibited
 - Independent audit approved
-
-**Initial status:** `NOT STARTED`
 
 ---
 
-## Batch 6 — Google Drive & Communication
+## Phase 8 — Google Drive Document Management
 
 ### Scope
 
-- Google Drive folder architecture
-- File metadata
-- Folder and file ID persistence
-- File upload and download integration
-- Version tracking
-- Client communications
-- Internal communication
-- Email integration
-- Draft, review, approve, and send workflow
-- Communication audit trail
+- Client-wise folder architecture
+- Engagement-wise folder architecture
+- Real file upload and download
+- Google Drive file and folder ID persistence
+- File versioning
+- Replace and archive workflow
+- Permission and destination control
+- Document activity trail
+- PostgreSQL metadata linkage
 
 ### Exit Criteria
 
-- Real Drive operations proven
-- No fake upload success
-- No fake email success
-- Permission and destination rules tested
+- Actual files are stored in Google Drive
+- PostgreSQL stores metadata and relationships only
+- No fake upload success exists
+- Permission, destination, and version rules are tested
 - Independent audit approved
-
-**Initial status:** `NOT STARTED`
 
 ---
 
-## Batch 7 — Staff, Notifications & AI
+## Phase 9 — Notifications & Communication
 
 ### Scope
 
-- Staff profiles
-- Attendance
-- Leave
-- Work logs
-- Performance
-- Salary and allowance foundation
-- Notification engine
-- Deadline alerts
-- Review alerts
-- Client-document alerts
-- Permission-aware AI context
-- Controlled AI suggestions and actions
+- Task deadline alerts
+- Leave approval alerts
+- Review-note alerts
+- Missing-client-document alerts
+- Internal notification center
+- Unread counts
+- Email draft, review, approval, and send workflow
+- Delivery status
+- Communication log and audit trail
 
 ### Exit Criteria
 
-- Staff operations persistent
-- Notification triggers tested
-- AI cannot bypass permissions
+- Notifications come from real backend events
+- Delivery status appears only after provider confirmation
+- No fake email or message success exists
+- Communication history is traceable
+- Independent audit approved
+
+---
+
+## Phase 10 — Gemini AI Assistant
+
+### Scope
+
+- Document summaries
+- Audit-risk suggestions
+- Requisition drafts
+- Review-note drafts
+- Working-paper assistance
+- Client-communication drafts
+- Permission-aware context
+- AI request and response audit trail
+- Cost, rate, and retention controls
+
+### Mandatory Restrictions
+
 - AI cannot approve or sign professional work
-- Independent audit approved
+- AI cannot bypass permissions
+- AI cannot delete or execute restricted actions without authorized backend control
+- AI output must be presented as assistance, not authoritative professional approval
+- Gemini API key remains backend-only
 
-**Initial status:** `NOT STARTED`
+### Exit Criteria
+
+- AI scope and limitations are explicit
+- AI actions are auditable
+- Permission boundaries are tested
+- Independent audit approved
 
 ---
 
-## Batch 8 — Production Hardening & Final E2E
+## Phase 11 — Dashboard & Reports
+
+### Scope
+
+- Partner dashboard
+- Manager dashboard
+- Staff dashboard
+- Student dashboard
+- Client and engagement status
+- Pending and overdue work
+- Attendance and leave summaries
+- Staff workload
+- Billable hours
+- Audit progress
+- Office KPIs
+
+### Exit Criteria
+
+- Dashboard values come only from persistent backend data
+- KPI calculations are documented and reproducible
+- Role-based visibility is enforced
+- No mock production metrics remain
+- Independent audit approved
+
+---
+
+## Phase 12 — Production Hardening
 
 ### Scope
 
 - Rate limiting
 - Security headers
 - Secret validation
-- Audit logging
-- Error monitoring
-- Database backup
-- Restore testing
+- Database backup and restore test
 - Migration verification
-- Performance checks
+- Error monitoring
+- Performance testing
 - Dependency review
 - API contract audit
-- Render deployment
-- Frontend and backend integration
-- Final end-to-end verification
+- Full frontend/backend integration
+- Render deployment verification
+- Vercel deployment verification
+- Final role-based end-to-end testing
 
 ### Mandatory Final Proof
 
-`Admin@001`  
-→ Login  
-→ Dashboard  
-→ Refresh  
-→ Logout  
+```text
+Owner/Admin
+→ Login
+→ Dashboard
+→ Real profile and role visible
+→ Refresh
+→ Session remains valid
+→ Logout
+→ Protected route redirects to Login
 → Re-login
+```
 
-Module-level proof is also mandatory for:
+Module-level proof is required for:
 
-- Users and RBAC
+- Users, roles, permissions, staff, and students
 - Clients
-- Jobs
-- Work Station
-- Audit
-- Drive
-- Communication
-- Staff
-- Notifications
-- AI restrictions
+- Engagements and jobs
+- Staff operations
+- Job Work Station
+- Audit workflow
+- Google Drive documents
+- Notifications and communication
+- Gemini AI restrictions
+- Dashboards and reports
 
 ### Exit Criteria
 
 - All critical tests pass
-- Production deployment verified
-- No unresolved P0 or P1 blockers
+- Production deployments are verified
+- Backup and restore are proven
+- No unresolved P0 or P1 blockers remain
+- No production screen converts backend failure into fake success
 - Final independent audit approved
 
-**Initial status:** `NOT STARTED`
-
 ---
 
-## Batch Execution Rules
+## Development Order
 
-1. Only one batch may be active at a time.
-2. No future batch may begin before the current batch is independently audited and approved.
-3. Every batch must return one clean backend-only ZIP.
-4. Every batch must include:
-   - `IMPLEMENTATION_REPORT.md`
-   - `TEST_REPORT.md`
-   - `API_CONTRACT.md` or updated API documentation
-   - Migration list
-   - Exact remaining gaps
+```text
+Backend Stabilization
+→ Users, Staff & Students
+→ Clients
+→ Engagements & Jobs
+→ Staff Operations
+→ Job Work Station
+→ Audit Workflow
+→ Google Drive
+→ Notifications & Communication
+→ Gemini AI
+→ Dashboards & Reports
+→ Production Hardening
+```
+
+## Phase Execution Rules
+
+1. Only one phase may be active at a time unless the project owner explicitly authorizes otherwise.
+2. A future phase must not begin before prerequisite data models and API contracts are stable.
+3. Backend API contracts are the source of truth for frontend integration.
+4. Every phase must include an implementation report, test evidence, API contract changes, migration list, and exact remaining gaps.
 5. Never claim tests passed without actual command output.
 6. Never claim deployment works without live evidence.
-7. Never silently change the frontend API contract.
-8. Never use Supabase Auth.
-9. Never commit passwords, tokens, database credentials, or other secrets.
-10. Never include frontend source, `venv`, `node_modules`, caches, nested ZIPs, or generated junk in the backend ZIP.
-11. The README progress percentage must reflect actual verified work, not estimates or optimistic claims.
-12. A batch at `READY FOR AUDIT` is not complete until audit approval.
-13. Any failed audit must set the batch to `CORRECTION REQUIRED`.
-14. Code from a later batch must not be mixed into an earlier batch without explicit written approval.
+7. Never silently change an approved frontend/backend API contract.
+8. Never commit passwords, tokens, API keys, database credentials, or other secrets.
+9. Never present local, mock, or in-memory state as persistent production data.
+10. Never convert backend failure into fake success.
+11. Progress percentages must reflect verified work, not estimates.
+12. `READY FOR AUDIT` is not complete until independent approval.
+13. A failed audit must set the phase to `CORRECTION REQUIRED`.
+14. Professional approval and sign-off must remain separate from technical administration.
+15. Authentication changes require explicit defect evidence and complete regression proof.
 
----
+## Change Log
 
-## Backend Batch Change Log
+### Roadmap Replacement — 20 July 2026, 11:13 AM BDT
 
-For every batch change, use this format without inventing history:
-
-### Batch X — Date
-
-- Status before:
-- Status after:
-- Commit/ZIP:
-- Features completed:
-- Tests executed:
-- Audit result:
-- Remaining blockers:
-- Approved by:
-
-### Roadmap Initialization
-
-- Added controlled 8-batch backend roadmap
-- No backend code changed
-- All batches remain `NOT STARTED`
-- Awaiting project owner approval to start Batch 1
-
-### Batch 1 — July 19, 2026
-
-- Status before: `NOT STARTED`
-- Status after: `IN PROGRESS`
-- Commit/ZIP: README status-start commit; backend ZIP pending
-- Features completed: None; implementation has not started
-- Tests executed: None
-- Audit result: Pending
-- Remaining blockers: Batch 1 implementation, test execution, evidence collection, and independent audit
-- Approved by: Pending
-
-### Architecture Lock — July 20, 2026, 11:03 AM BDT
-
-- Locked Vercel as frontend hosting and Render as backend hosting.
-- Locked PostgreSQL as the structured-data system of record.
-- Locked Google Drive API for actual document storage; PostgreSQL stores document metadata only.
-- Locked Google Gemini API behind the FastAPI backend.
-- Confirmed that Gemini, Drive, database, and JWT secrets must remain backend-only environment variables.
-- No application code, authentication behavior, database migration, or deployment configuration changed in this documentation commit.
+- Replaced the previous eight-batch roadmap with the reviewed 12-phase master roadmap.
+- Moved Users, Staff, and Students Foundation before Client and Engagement implementation.
+- Separated Staff Operations, Google Drive, Notifications, Gemini AI, and Dashboards into dedicated phases.
+- Preserved backend-first development and independent audit gates.
+- Preserved the locked Vercel, Render, PostgreSQL, Google Drive, and Gemini architecture.
+- Preserved the current authentication contract and added a strict owner-access protection rule.
+- No application code, authentication logic, database migration, deployment configuration, or secret was changed in this documentation commit.
