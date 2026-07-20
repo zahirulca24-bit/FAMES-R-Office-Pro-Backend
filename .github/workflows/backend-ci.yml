@@ -1,0 +1,63 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: fames_test
+          POSTGRES_USER: fames
+          POSTGRES_PASSWORD: fames_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U fames -d fames_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+psycopg://fames:fames_test_password@localhost:5432/fames_test
+      JWT_SECRET: test-only-secret-that-is-longer-than-32-characters
+      CORS_ORIGINS: http://localhost:5173
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -e .[dev]
+
+      - name: Show migration history
+        run: alembic history
+
+      - name: Upgrade clean PostgreSQL database
+        run: alembic upgrade head
+
+      - name: Show current revision
+        run: alembic current
+
+      - name: Verify downgrade
+        run: alembic downgrade base
+
+      - name: Verify re-upgrade
+        run: alembic upgrade head
+
+      - name: Run tests
+        run: pytest -q
