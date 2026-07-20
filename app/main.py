@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import get_settings
 from app.db import Base, engine
@@ -58,3 +60,30 @@ def health() -> dict[str, str]:
 @app.get("/api/v1/health")
 def api_health() -> dict[str, str]:
     return {"status": "ok", "service": "fames-r-office-pro-backend"}
+
+
+@app.get("/health/live")
+def health_live() -> dict[str, str]:
+    """Process-level liveness check; does not depend on external services."""
+    return {"status": "ok", "service": "fames-r-office-pro-backend"}
+
+
+@app.get("/health/ready")
+def health_ready(response: Response) -> dict[str, str]:
+    """Readiness check that proves the configured database accepts a query."""
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return {
+            "status": "unavailable",
+            "service": "fames-r-office-pro-backend",
+            "database": "unavailable",
+        }
+
+    return {
+        "status": "ok",
+        "service": "fames-r-office-pro-backend",
+        "database": "ready",
+    }
