@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -20,6 +20,25 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @model_validator(mode="after")
+    def validate_production_settings(self) -> "Settings":
+        if self.app_env.lower() != "production":
+            return self
+
+        if not self.database_url.startswith(("postgresql://", "postgresql+psycopg://")):
+            raise ValueError("Production DATABASE_URL must use PostgreSQL")
+
+        if self.jwt_secret == "development-only-change-me-please-32chars" or len(self.jwt_secret) < 32:
+            raise ValueError("Production JWT_SECRET must be a unique value of at least 32 characters")
+
+        if not self.cors_origin_list:
+            raise ValueError("Production CORS_ORIGINS must contain at least one frontend origin")
+
+        if "*" in self.cors_origin_list:
+            raise ValueError("Wildcard CORS origin is not allowed in production")
+
+        return self
 
 
 @lru_cache
