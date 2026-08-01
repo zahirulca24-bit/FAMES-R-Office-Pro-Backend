@@ -2,6 +2,7 @@ import os
 
 from sqlalchemy import func, select
 
+from app.config import get_settings
 from app.db import Base, SessionLocal, engine
 from app.models import AuthUser
 from app.security import hash_password
@@ -29,7 +30,10 @@ def main() -> None:
     Set BOOTSTRAP_FORCE_RESET=true only for an intentional no-shell recovery.
     After recovery succeeds, remove/disable BOOTSTRAP_FORCE_RESET again.
     """
-    Base.metadata.create_all(bind=engine)
+    settings = get_settings()
+    if settings.app_env.lower() != "production":
+        Base.metadata.create_all(bind=engine)
+
     force_reset = _env_flag("BOOTSTRAP_FORCE_RESET")
 
     with SessionLocal() as db:
@@ -59,7 +63,7 @@ def main() -> None:
                     print(f"CREATE {login_id}")
                 else:
                     # Keep identity metadata synchronized, but never rotate a working
-                    # password merely because Render restarted or redeployed.
+                    # password merely because the service restarted or redeployed.
                     user.email = email
                     user.full_name = full_name
                     user.role = role
