@@ -23,16 +23,36 @@ def isolated_test_database():
     Base.metadata.create_all(bind=engine)
 
     with SessionLocal() as db:
-        db.add(
-            AuthUser(
-                login_id="Admin@001",
-                email="admin@example.com",
-                full_name="Admin",
-                role="SUPER_ADMIN",
-                password_hash=hash_password("StrongPass#123"),
-                status="ACTIVE",
-                must_change_password=True,
-            )
+        db.add_all(
+            [
+                AuthUser(
+                    login_id="Admin@001",
+                    email="admin@example.com",
+                    full_name="Admin",
+                    role="SUPER_ADMIN",
+                    password_hash=hash_password("StrongPass#123"),
+                    status="ACTIVE",
+                    must_change_password=True,
+                ),
+                AuthUser(
+                    login_id="Manager@001",
+                    email="manager1@example.com",
+                    full_name="Manager One",
+                    role="MANAGER",
+                    password_hash=hash_password("ManagerPass#123"),
+                    status="ACTIVE",
+                    must_change_password=True,
+                ),
+                AuthUser(
+                    login_id="Student@001",
+                    email="student1@example.com",
+                    full_name="Student One",
+                    role="STUDENT",
+                    password_hash=hash_password("StudentPass#123"),
+                    status="ACTIVE",
+                    must_change_password=False,
+                ),
+            ]
         )
         db.commit()
 
