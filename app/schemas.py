@@ -1,4 +1,14 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+
+
+ALLOWED_USER_ROLES = {
+    "SUPER_ADMIN",
+    "PARTNER",
+    "MANAGER",
+    "STUDENT",
+    "CLIENT",
+    "ASSISTANT_DEVELOPER",
+}
 
 
 class UserView(BaseModel):
@@ -38,6 +48,14 @@ class AdminCreateUserRequest(BaseModel):
     role: str = Field(min_length=2, max_length=80)
     password: str = Field(min_length=10, max_length=512)
     must_change_password: bool = True
+
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, value: str) -> str:
+        normalized = value.strip().upper()
+        if normalized not in ALLOWED_USER_ROLES:
+            raise ValueError("Unsupported user role")
+        return normalized
 
 
 class AdminStatusRequest(BaseModel):

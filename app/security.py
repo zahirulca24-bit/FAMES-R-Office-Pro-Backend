@@ -31,7 +31,14 @@ def password_needs_rehash(password_hash: str) -> bool:
         return True
 
 
-def create_access_token(*, subject: str, login_id: str, role: str, remember_me: bool) -> tuple[str, int]:
+def create_access_token(
+    *,
+    subject: str,
+    login_id: str,
+    role: str,
+    token_version: int,
+    remember_me: bool,
+) -> tuple[str, int]:
     settings = get_settings()
     minutes = settings.remember_token_minutes if remember_me else settings.access_token_minutes
     now = datetime.now(timezone.utc)
@@ -40,6 +47,7 @@ def create_access_token(*, subject: str, login_id: str, role: str, remember_me: 
         "sub": subject,
         "login_id": login_id,
         "role": role,
+        "ver": token_version,
         "iat": int(now.timestamp()),
         "exp": int(expires.timestamp()),
         "type": "access",

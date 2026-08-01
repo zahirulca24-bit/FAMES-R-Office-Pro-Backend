@@ -9,6 +9,7 @@ from app.security import decode_access_token
 
 
 bearer_scheme = HTTPBearer(auto_error=False)
+MANAGER_ACCESS_ROLES = {"SUPER_ADMIN", "PARTNER", "MANAGER"}
 
 
 def get_current_user(
@@ -25,10 +26,26 @@ def get_current_user(
     user = db.get(AuthUser, str(payload.get("sub", "")))
     if user is None or user.status != "ACTIVE":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Account is not active")
+
+    token_version = payload.get("ver")
+    if not isinstance(token_version, int) or token_version != user.token_version:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session is no longer valid")
     return user
 
 
-def require_super_admin(user: AuthUser = Depends(get_current_user)) -> AuthUser:
+def require_password_changed(user: AuthUser = Depends(get_current_user)) -> AuthUser:
+    if user.must_change_password:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Password change required")
+    return user
+
+
+def require_super_admin(user: AuthUser = Depends(require_password_changed)) -> AuthUser:
     if user.role != "SUPER_ADMIN":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Super Admin access required")
+    return user
+
+
+def require_manager(user: AuthUser = Depends(require_password_changed)) -> AuthUser:
+    if user.role not in MANAGER_ACCESS_ROLES:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Manager access required")
     return user
