@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.db import Base, engine
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
+from app.routers.manager import router as manager_router
 
 
 def _run_startup_bootstrap() -> None:
@@ -55,6 +56,7 @@ app.add_middleware(
 )
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(manager_router)
 
 
 @app.get("/health")
