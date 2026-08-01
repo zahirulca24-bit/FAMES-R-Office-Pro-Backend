@@ -37,9 +37,9 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # Local SQLite development can create its disposable schema automatically.
-    # Production schema changes must run only through Alembic migrations.
-    if settings.app_env.lower() != "production":
+    # Disposable development/test databases may create their schema automatically.
+    # Every hosted environment must receive schema changes through Alembic.
+    if settings.app_env.lower() in {"development", "test"}:
         Base.metadata.create_all(bind=engine)
     _run_startup_bootstrap()
     yield
