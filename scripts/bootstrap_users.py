@@ -10,7 +10,15 @@ from app.security import hash_password
 
 USERS = [
     ("Admin@001", "zahirul.ca24@gmail.com", "FAMES & R Super Admin", "SUPER_ADMIN", "BOOTSTRAP_ADMIN_PASSWORD", "ACTIVE"),
-    ("Manager@001", "manager.fames@gmail.com", "FAMES & R Manager", "MANAGER", "BOOTSTRAP_MANAGER_PASSWORD", "ACTIVE"),
+    ("Manager@001", "manager.fames@gmail.com", "FAMES & R Manager 1", "MANAGER", "BOOTSTRAP_MANAGER_PASSWORD", "ACTIVE"),
+    (
+        "Manager@002",
+        os.getenv("BOOTSTRAP_MANAGER_002_EMAIL") or None,
+        os.getenv("BOOTSTRAP_MANAGER_002_NAME") or "FAMES & R Manager 2",
+        "MANAGER",
+        "BOOTSTRAP_MANAGER_002_PASSWORD",
+        "ACTIVE",
+    ),
     ("AssistantDev@001", "Nayan.macrom@gmail.com", "Nayan", "ASSISTANT_DEVELOPER", "BOOTSTRAP_ASSISTANT_DEVELOPER_PASSWORD", "ACTIVE"),
     ("Student@001", "bayazidmridha6@gmail.com", "Bayazid", "STUDENT", "BOOTSTRAP_STUDENT_001_PASSWORD", "ACTIVE"),
     ("Student@002", "iftekhairul2000@gmail.com", "Iftekhar", "STUDENT", "BOOTSTRAP_STUDENT_002_PASSWORD", "ACTIVE"),
@@ -74,6 +82,7 @@ def main() -> None:
                         user.failed_login_count = 0
                         user.locked_until = None
                         user.must_change_password = True
+                        user.token_version += 1
                         print(f"RECOVER {login_id}")
                     else:
                         print(f"KEEP {login_id}: existing password preserved")
