@@ -32,14 +32,19 @@ def _run_startup_bootstrap() -> None:
         print(f"STARTUP BOOTSTRAP ERROR: {type(exc).__name__}: {exc}")
 
 
+settings = get_settings()
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    # Disposable development/test databases may create their schema automatically.
+    # Every hosted environment must receive schema changes through Alembic.
+    if settings.app_env.lower() in {"development", "test"}:
+        Base.metadata.create_all(bind=engine)
     _run_startup_bootstrap()
     yield
 
 
-settings = get_settings()
 app = FastAPI(title="FAMES & R Office PRO API", version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
