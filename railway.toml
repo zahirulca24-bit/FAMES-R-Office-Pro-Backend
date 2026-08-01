@@ -2,7 +2,7 @@
 builder = "RAILPACK"
 
 [deploy]
-preDeployCommand = ["python scripts/run_migrations.py"]
+preDeployCommand = ["sh -lc 'echo PREDEPLOY_PWD=$(pwd); test -f /app/scripts/run_migrations.py; python -u /app/scripts/run_migrations.py'"]
 startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health/ready"
 healthcheckTimeout = 180
