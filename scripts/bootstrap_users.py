@@ -31,7 +31,7 @@ def main() -> None:
     After recovery succeeds, remove/disable BOOTSTRAP_FORCE_RESET again.
     """
     settings = get_settings()
-    if settings.app_env.lower() != "production":
+    if settings.app_env.lower() in {"development", "test"}:
         Base.metadata.create_all(bind=engine)
 
     force_reset = _env_flag("BOOTSTRAP_FORCE_RESET")
