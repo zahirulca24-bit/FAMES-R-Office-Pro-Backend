@@ -22,7 +22,14 @@ def _client_ip(request: Request) -> str | None:
     return request.client.host if request.client else None
 
 
-def _audit(db: Session, request: Request, event_type: str, user: AuthUser | None = None, login_id: str | None = None, detail: str | None = None) -> None:
+def _audit(
+    db: Session,
+    request: Request,
+    event_type: str,
+    user: AuthUser | None = None,
+    login_id: str | None = None,
+    detail: str | None = None,
+) -> None:
     db.add(
         AuthAuditLog(
             user_id=user.id if user else None,
@@ -76,6 +83,7 @@ def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)
         subject=user.id,
         login_id=user.login_id,
         role=user.role,
+        token_version=user.token_version,
         remember_me=payload.remember_me,
     )
     _audit(db, request, "LOGIN_SUCCESS", user=user)
@@ -108,6 +116,7 @@ def change_password(
     user.password_hash = hash_password(payload.new_password)
     user.must_change_password = False
     user.password_changed_at = datetime.now(timezone.utc)
-    _audit(db, request, "PASSWORD_CHANGED", user=user)
+    user.token_version += 1
+    _audit(db, request, "PASSWORD_CHANGED", user=user, detail="all_previous_tokens_revoked")
     db.commit()
-    return {"message": "Password changed successfully"}
+    return {"message": "Password changed successfully. Please sign in again."}
