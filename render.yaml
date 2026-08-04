@@ -7,8 +7,8 @@ services:
     branch: main
     autoDeploy: true
     buildCommand: pip install -e .
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /api/v1/health
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health/ready
     envVars:
       - key: APP_ENV
         value: production
@@ -17,6 +17,8 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://fames-r-office-pro-frontend.vercel.app
+        value: https://fames-r-office-pro-frontend.vercel.app,https://fames-r-office-pro-frontend-zahirulca24-1843s-projects.vercel.app,https://fames-r-office-pro-frontend-git-main-zahirulca24-1843s-projects.vercel.app
+      - key: CORS_ORIGIN_REGEX
+        value: '^https://fames-r-office-pro-frontend(?:-[a-z0-9-]+)*\.vercel\.app$'
       - key: PYTHON_VERSION
         value: 3.12.8
