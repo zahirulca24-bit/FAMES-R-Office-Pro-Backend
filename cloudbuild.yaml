@@ -1,0 +1,46 @@
+substitutions:
+  _REGION: asia-south1
+  _SERVICE: fames-r-office-pro-backend
+  _REPOSITORY: fames-r-office-pro
+  _CLOUD_SQL_INSTANCE: CHANGE_ME_PROJECT:asia-south1:CHANGE_ME_INSTANCE
+  _DATABASE_SECRET: fames-office-database-url
+  _JWT_SECRET: fames-office-jwt-secret
+  _CORS_ORIGINS: https://CHANGE_ME_PROJECT.web.app,https://CHANGE_ME_PROJECT.firebaseapp.com
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$COMMIT_SHA
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$COMMIT_SHA
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$COMMIT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --add-cloudsql-instances=${_CLOUD_SQL_INSTANCE}
+      - --set-env-vars=APP_ENV=production,CORS_ORIGINS=${_CORS_ORIGINS}
+      - --set-secrets=DATABASE_URL=${_DATABASE_SECRET}:latest,JWT_SECRET=${_JWT_SECRET}:latest
+      - --min-instances=0
+      - --max-instances=3
+      - --cpu=1
+      - --memory=512Mi
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$COMMIT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
