@@ -32,7 +32,7 @@ steps:
       - --allow-unauthenticated
       - --port=8080
       - --add-cloudsql-instances=${_CLOUD_SQL_INSTANCE}
-      - --set-env-vars=APP_ENV=production,CORS_ORIGINS=${_CORS_ORIGINS}
+      - --set-env-vars=^@^APP_ENV=production@CORS_ORIGINS=${_CORS_ORIGINS}
       - --set-secrets=DATABASE_URL=${_DATABASE_SECRET}:latest,JWT_SECRET=${_JWT_SECRET}:latest
       - --min-instances=0
       - --max-instances=3
