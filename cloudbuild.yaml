@@ -1,11 +1,11 @@
 substitutions:
   _REGION: asia-south1
   _SERVICE: fames-r-office-pro-backend
-  _REPOSITORY: fames-r-office-pro
-  _CLOUD_SQL_INSTANCE: CHANGE_ME_PROJECT:asia-south1:CHANGE_ME_INSTANCE
-  _DATABASE_SECRET: fames-office-database-url
-  _JWT_SECRET: fames-office-jwt-secret
-  _CORS_ORIGINS: https://CHANGE_ME_PROJECT.web.app,https://CHANGE_ME_PROJECT.firebaseapp.com
+  _REPOSITORY: fames-office
+  _CLOUD_SQL_INSTANCE: fames-office-pro-v1:asia-south1:fames-office-db
+  _DATABASE_SECRET: fames-database-url
+  _JWT_SECRET: fames-jwt-secret
+  _CORS_ORIGINS: https://fames-office-pro-v1.web.app,https://fames-office-pro-v1.firebaseapp.com
 
 steps:
   - name: gcr.io/cloud-builders/docker
