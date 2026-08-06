@@ -42,3 +42,38 @@ class AuthAuditLog(Base):
     user_agent: Mapped[str | None] = mapped_column(Text, nullable=True)
     detail: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False, index=True)
+
+
+class AuditEvent(Base):
+    """Append-only security and business-control event."""
+
+    __tablename__ = "audit_events"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    actor_user_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("auth_users.id", ondelete="SET NULL"), nullable=True, index=True)
+    event_type: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    resource_type: Mapped[str] = mapped_column(String(80), nullable=False, index=True)
+    resource_id: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    correlation_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    outcome: Mapped[str] = mapped_column(String(30), nullable=False, default="SUCCESS", index=True)
+    ip_address: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(Text, nullable=True)
+    before_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    after_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    detail_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False, index=True)
+
+
+class ActivityEvent(Base):
+    """Business-user timeline event; distinct from the security audit log."""
+
+    __tablename__ = "activity_events"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    actor_user_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("auth_users.id", ondelete="SET NULL"), nullable=True, index=True)
+    event_type: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    resource_type: Mapped[str] = mapped_column(String(80), nullable=False, index=True)
+    resource_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    summary: Mapped[str] = mapped_column(String(500), nullable=False)
+    detail_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False, index=True)
