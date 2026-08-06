@@ -1,13 +1,14 @@
 from contextlib import asynccontextmanager
 import os
 
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import get_settings
 from app.db import Base, engine
+from app.foundation.http import ApiError, CorrelationIdMiddleware, correlation_id_from_request, error_response
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.manager import router as manager_router
@@ -38,8 +39,6 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # Disposable development/test databases may create their schema automatically.
-    # Every hosted environment must receive schema changes through Alembic.
     if settings.app_env.lower() in {"development", "test"}:
         Base.metadata.create_all(bind=engine)
     _run_startup_bootstrap()
@@ -47,6 +46,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="FAMES & R Office PRO API", version="0.1.0", lifespan=lifespan)
+app.add_middleware(CorrelationIdMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
@@ -54,6 +54,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(ApiError)
+async def handle_api_error(request: Request, exc: ApiError):
+    return error_response(exc, correlation_id_from_request(request))
+
+
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(manager_router)
@@ -71,13 +78,11 @@ def api_health() -> dict[str, str]:
 
 @app.get("/health/live")
 def health_live() -> dict[str, str]:
-    """Process-level liveness check; does not depend on external services."""
     return {"status": "ok", "service": "fames-r-office-pro-backend"}
 
 
 @app.get("/health/ready")
 def health_ready(response: Response) -> dict[str, str]:
-    """Readiness check that proves the configured database accepts a query."""
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
