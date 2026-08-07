@@ -24,6 +24,7 @@ from app.client_models import (  # noqa: F401
 )
 from app.config import get_settings
 from app.db import Base
+from app.document_models import Document, DocumentAccessLog, DocumentVersion  # noqa: F401
 from app.engagement_closure_models import EngagementReviewAction  # noqa: F401
 from app.engagement_models import Engagement, EngagementNumberSequence, EngagementTeamMember  # noqa: F401
 from app.engagement_template_models import (  # noqa: F401
