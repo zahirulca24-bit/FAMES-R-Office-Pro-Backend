@@ -30,6 +30,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Task dependency, lifecycle, deadline escalation and weighted engagement progress engine
 - Engagement review queue, completion blockers, final closure, lock and controlled reopen
 - Private document storage, version history, integrity hashes and access logs
+- Working papers with evidence linkage, review notes, sign-off history and locked-file immutability
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -154,26 +155,26 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Head 5 — Documents, Evidence & Working Papers
 
-**Head status: [ ] IN PROGRESS**
+**Head status: [x] COMPLETE**
 
 - [x] **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**
-- [ ] **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**
+- [x] **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**
 
 ### Head 5 completion gate
 
-- [ ] Both PRs merged
+- [x] Both PRs merged
 - [x] Unauthorized document download is blocked
 - [x] Document version history is retained
-- [ ] Working-paper sign-off sequence passes
-- [ ] Review-note resolution is traceable
-- [ ] Locked working papers cannot be silently edited
-- [ ] Full CI green
+- [x] Working-paper sign-off sequence passes
+- [x] Review-note resolution is traceable
+- [x] Locked working papers cannot be silently edited
+- [x] Full CI green — PR-BE-14 Backend CI run #68
 
 ---
 
 ## Head 6 — Audit Practice Engine
 
-**Head status: [ ] NOT STARTED**
+**Head status: [ ] IN PROGRESS**
 
 - [ ] **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**
 - [ ] **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**
@@ -216,12 +217,12 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 - [x] Head 2 — Client Master & Relationship Management
 - [x] Head 3 — Staff, Capacity & Worklogs
 - [x] Head 4 — Engagement, Tasks & Operational Workflow
-- [ ] Head 5 — Documents, Evidence & Working Papers
+- [x] Head 5 — Documents, Evidence & Working Papers
 - [ ] Head 6 — Audit Practice Engine
 - [ ] Head 7 — Finance, Reporting & Production Hardening
 
 ## Current phase
 
-**Head 5 — Documents, Evidence & Working Papers: IN PROGRESS**
+**Head 6 — Audit Practice Engine: IN PROGRESS**
 
-Current implementation target: **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**.
+Current implementation target: **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**.
