@@ -29,6 +29,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Engagement templates with automatic task and required-document generation
 - Task dependency, lifecycle, deadline escalation and weighted engagement progress engine
 - Engagement review queue, completion blockers, final closure, lock and controlled reopen
+- Private document storage, version history, integrity hashes and access logs
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -155,14 +156,14 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head status: [ ] IN PROGRESS**
 
-- [ ] **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**
+- [x] **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**
 - [ ] **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**
 
 ### Head 5 completion gate
 
 - [ ] Both PRs merged
-- [ ] Unauthorized document download is blocked
-- [ ] Document version history is retained
+- [x] Unauthorized document download is blocked
+- [x] Document version history is retained
 - [ ] Working-paper sign-off sequence passes
 - [ ] Review-note resolution is traceable
 - [ ] Locked working papers cannot be silently edited
@@ -223,4 +224,4 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head 5 — Documents, Evidence & Working Papers: IN PROGRESS**
 
-Current implementation target: **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**.
+Current implementation target: **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**.
