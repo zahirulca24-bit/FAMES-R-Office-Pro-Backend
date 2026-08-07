@@ -1,3 +1,4 @@
+import pytest
 from sqlalchemy import select
 from fastapi.testclient import TestClient
 
@@ -5,6 +6,13 @@ from app.db import SessionLocal
 from app.deps import require_password_changed
 from app.main import app
 from app.models import AuthUser
+
+
+@pytest.fixture(autouse=True)
+def clear_dependency_overrides():
+    app.dependency_overrides.clear()
+    yield
+    app.dependency_overrides.clear()
 
 
 def _admin_user() -> AuthUser:
@@ -94,8 +102,6 @@ def test_client_crud_search_activity_export_and_archive():
     default_list = client.get("/api/v1/clients", params={"q": "API Contract Limited"})
     assert all(item["id"] != client_id for item in default_list.json()["items"])
 
-    app.dependency_overrides.clear()
-
 
 def test_duplicate_identifier_returns_conflict():
     admin = _admin_user()
@@ -123,5 +129,3 @@ def test_duplicate_identifier_returns_conflict():
     )
     assert second.status_code == 409
     assert second.json()["error"]["code"] == "CLIENT_DUPLICATE_IDENTIFIER"
-
-    app.dependency_overrides.clear()
