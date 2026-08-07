@@ -7,7 +7,7 @@ import re
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, Query, Request, Response, status
+from fastapi import APIRouter, Depends, Query, Request, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
@@ -93,7 +93,6 @@ def _validate_owner_users(db: Session, partner_user_id: str, manager_user_id: st
 
 
 def _new_client_code() -> str:
-    # Collision-resistant immutable external code; a formal configurable naming series can replace this later.
     return f"FRC-CLI-{uuid.uuid4().hex[:10].upper()}"
 
 
@@ -211,6 +210,10 @@ def create_client(
             correlation_id=correlation_id_from_request(request),
         )
     )
+    warning_payload = [
+        {"client_id": warning.client_id, "score": warning.score, "field": warning.field}
+        for warning in warnings
+    ]
     _record_events(
         db,
         request=request,
@@ -218,7 +221,7 @@ def create_client(
         client=client,
         event_type="CLIENT_CREATED",
         summary=f"Client {client.client_code} created",
-        after={"legal_name": client.legal_name, "duplicate_warnings": [warning.__dict__ for warning in warnings]},
+        after={"legal_name": client.legal_name, "duplicate_warnings": warning_payload},
     )
     try:
         db.commit()
