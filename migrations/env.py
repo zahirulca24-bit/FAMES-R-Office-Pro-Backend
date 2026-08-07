@@ -4,6 +4,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from app.audit_execution_models import AuditCompletion, AuditCompletionAction, AuditIssue, AuditRequisition, AuditTest  # noqa: F401
 from app.audit_models import AuditAcceptance, AuditIndependenceDeclaration, AuditMateriality, AuditRisk, AuditRiskProcedure  # noqa: F401
 from app.client_lifecycle_models import ClientArchiveEvent, ClientConflictCheck, ClientPortfolioOwnership, ClientRiskProfile, ClientService  # noqa: F401
 from app.client_models import Client, ClientAddress, ClientContact, ClientDirector, ClientIdentifier, ClientRelationship, ClientShareholder, ClientStatusHistory  # noqa: F401
