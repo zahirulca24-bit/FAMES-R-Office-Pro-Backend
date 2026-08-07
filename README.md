@@ -31,6 +31,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Engagement review queue, completion blockers, final closure, lock and controlled reopen
 - Private document storage, version history, integrity hashes and access logs
 - Working papers with evidence linkage, review notes, sign-off history and locked-file immutability
+- Audit acceptance, independence, materiality, risk register and risk-to-procedure planning controls
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -176,14 +177,14 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head status: [ ] IN PROGRESS**
 
-- [ ] **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**
+- [x] **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**
 - [ ] **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**
 
 ### Head 6 completion gate
 
 - [ ] Both PRs merged
-- [ ] Acceptance and independence gates pass
-- [ ] Risk-to-procedure linkage is complete
+- [x] Acceptance and independence gates pass
+- [x] Risk-to-procedure linkage is complete
 - [ ] Requisition trail is traceable
 - [ ] Open high-risk issues block finalization
 - [ ] Complete audit file can be locked
@@ -225,4 +226,4 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head 6 — Audit Practice Engine: IN PROGRESS**
 
-Current implementation target: **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**.
+Current implementation target: **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**.
