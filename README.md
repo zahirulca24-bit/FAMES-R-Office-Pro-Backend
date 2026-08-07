@@ -28,6 +28,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Engagement Master, naming series, team assignment and engagement-level access boundary
 - Engagement templates with automatic task and required-document generation
 - Task dependency, lifecycle, deadline escalation and weighted engagement progress engine
+- Engagement review queue, completion blockers, final closure, lock and controlled reopen
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -131,28 +132,28 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Head 4 — Engagement, Tasks & Operational Workflow
 
-**Head status: [ ] IN PROGRESS**
+**Head status: [x] COMPLETE**
 
 - [x] **PR-BE-09 — Engagement Core, Naming Series & Team Assignment**
 - [x] **PR-BE-10 — Engagement Templates & Automatic Task Generation**
 - [x] **PR-BE-11 — Task, Dependency, Deadline & Weighted Progress Engine**
-- [ ] **PR-BE-12 — Engagement Workflow, Review Queue & Final Closure Controls**
+- [x] **PR-BE-12 — Engagement Workflow, Review Queue & Final Closure Controls**
 
 ### Head 4 completion gate
 
-- [ ] All four PRs merged
+- [x] All four PRs merged
 - [x] One real engagement can be created and assigned
 - [x] Template tasks generate correctly
 - [x] Dependency and deadline rules pass
 - [x] Weighted progress reconciles
-- [ ] Unauthorized closure/reopen attempts fail
-- [ ] Full CI green
+- [x] Unauthorized closure/reopen attempts fail
+- [x] Full CI green — PR-BE-12 Backend CI run #62
 
 ---
 
 ## Head 5 — Documents, Evidence & Working Papers
 
-**Head status: [ ] NOT STARTED**
+**Head status: [ ] IN PROGRESS**
 
 - [ ] **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**
 - [ ] **PR-BE-14 — Working Paper, Evidence Linkage, Review Notes & Sign-Off**
@@ -213,13 +214,13 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 - [x] Head 1 — Platform Foundation & Security
 - [x] Head 2 — Client Master & Relationship Management
 - [x] Head 3 — Staff, Capacity & Worklogs
-- [ ] Head 4 — Engagement, Tasks & Operational Workflow
+- [x] Head 4 — Engagement, Tasks & Operational Workflow
 - [ ] Head 5 — Documents, Evidence & Working Papers
 - [ ] Head 6 — Audit Practice Engine
 - [ ] Head 7 — Finance, Reporting & Production Hardening
 
 ## Current phase
 
-**Head 4 — Engagement, Tasks & Operational Workflow: IN PROGRESS**
+**Head 5 — Documents, Evidence & Working Papers: IN PROGRESS**
 
-Current implementation target: **PR-BE-12 — Engagement Workflow, Review Queue & Final Closure Controls**.
+Current implementation target: **PR-BE-13 — Private Document Storage, Metadata, Versioning & Access Logs**.
