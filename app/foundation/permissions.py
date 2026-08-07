@@ -21,6 +21,11 @@ class Permission(StrEnum):
     ENGAGEMENT_CLOSE = "engagement.close"
     ENGAGEMENT_REOPEN = "engagement.reopen"
 
+    DOCUMENT_VIEW = "document.view"
+    DOCUMENT_UPLOAD = "document.upload"
+    DOCUMENT_VERSION = "document.version"
+    DOCUMENT_ARCHIVE = "document.archive"
+
     WORKING_PAPER_PREPARE = "working_paper.prepare"
     WORKING_PAPER_SUBMIT = "working_paper.submit"
     WORKING_PAPER_REVIEW = "working_paper.review"
@@ -63,6 +68,10 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
                 Permission.ENGAGEMENT_APPROVE,
                 Permission.ENGAGEMENT_CLOSE,
                 Permission.ENGAGEMENT_REOPEN,
+                Permission.DOCUMENT_VIEW,
+                Permission.DOCUMENT_UPLOAD,
+                Permission.DOCUMENT_VERSION,
+                Permission.DOCUMENT_ARCHIVE,
                 Permission.WORKING_PAPER_REVIEW,
                 Permission.WORKING_PAPER_APPROVE,
                 Permission.WORKING_PAPER_LOCK,
@@ -84,6 +93,10 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
                 Permission.ENGAGEMENT_VIEW,
                 Permission.ENGAGEMENT_CREATE,
                 Permission.ENGAGEMENT_ASSIGN,
+                Permission.DOCUMENT_VIEW,
+                Permission.DOCUMENT_UPLOAD,
+                Permission.DOCUMENT_VERSION,
+                Permission.DOCUMENT_ARCHIVE,
                 Permission.WORKING_PAPER_PREPARE,
                 Permission.WORKING_PAPER_SUBMIT,
                 Permission.WORKING_PAPER_REVIEW,
@@ -99,6 +112,7 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             {
                 Permission.CLIENT_VIEW,
                 Permission.ENGAGEMENT_VIEW,
+                Permission.DOCUMENT_VIEW,
                 Permission.WORKING_PAPER_REVIEW,
             }
         ),
@@ -109,6 +123,9 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             {
                 Permission.CLIENT_VIEW,
                 Permission.ENGAGEMENT_VIEW,
+                Permission.DOCUMENT_VIEW,
+                Permission.DOCUMENT_UPLOAD,
+                Permission.DOCUMENT_VERSION,
                 Permission.WORKING_PAPER_PREPARE,
                 Permission.WORKING_PAPER_SUBMIT,
             }
@@ -119,6 +136,8 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
         frozenset(
             {
                 Permission.ENGAGEMENT_VIEW,
+                Permission.DOCUMENT_VIEW,
+                Permission.DOCUMENT_UPLOAD,
                 Permission.WORKING_PAPER_PREPARE,
                 Permission.WORKING_PAPER_SUBMIT,
             }
@@ -134,4 +153,4 @@ def permissions_for_role(role: str) -> frozenset[Permission]:
 
 
 def role_has_permission(role: str, permission: Permission) -> bool:
-    return permission in permissions_for_role(role)
+    return permission in permissions_for_role(role, )
