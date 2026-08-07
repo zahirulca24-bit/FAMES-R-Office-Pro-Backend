@@ -28,6 +28,8 @@ from app.engagement_models import Engagement, EngagementNumberSequence, Engageme
 from app.engagement_template_models import (  # noqa: F401
     EngagementGeneratedTask,
     EngagementRequiredDocument,
+    EngagementTaskDependency,
+    EngagementTaskStatusHistory,
     EngagementTemplate,
     EngagementTemplateDocument,
     EngagementTemplateTask,
