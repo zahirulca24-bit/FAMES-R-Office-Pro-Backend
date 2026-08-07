@@ -26,6 +26,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Staff Master, departments, designations, reporting hierarchy and skills
 - Attendance, leave, capacity assignments and controlled worklogs
 - Engagement Master, naming series, team assignment and engagement-level access boundary
+- Engagement templates with automatic task and required-document generation
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -132,7 +133,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 **Head status: [ ] IN PROGRESS**
 
 - [x] **PR-BE-09 — Engagement Core, Naming Series & Team Assignment**
-- [ ] **PR-BE-10 — Engagement Templates & Automatic Task Generation**
+- [x] **PR-BE-10 — Engagement Templates & Automatic Task Generation**
 - [ ] **PR-BE-11 — Task, Dependency, Deadline & Weighted Progress Engine**
 - [ ] **PR-BE-12 — Engagement Workflow, Review Queue & Final Closure Controls**
 
@@ -140,7 +141,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 - [ ] All four PRs merged
 - [x] One real engagement can be created and assigned
-- [ ] Template tasks generate correctly
+- [x] Template tasks generate correctly
 - [ ] Dependency and deadline rules pass
 - [ ] Weighted progress reconciles
 - [ ] Unauthorized closure/reopen attempts fail
@@ -220,4 +221,4 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head 4 — Engagement, Tasks & Operational Workflow: IN PROGRESS**
 
-Current implementation target: **PR-BE-10 — Engagement Templates & Automatic Task Generation**.
+Current implementation target: **PR-BE-11 — Task, Dependency, Deadline & Weighted Progress Engine**.
