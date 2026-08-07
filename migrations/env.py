@@ -25,6 +25,13 @@ from app.client_models import (  # noqa: F401
 from app.config import get_settings
 from app.db import Base
 from app.engagement_models import Engagement, EngagementNumberSequence, EngagementTeamMember  # noqa: F401
+from app.engagement_template_models import (  # noqa: F401
+    EngagementGeneratedTask,
+    EngagementRequiredDocument,
+    EngagementTemplate,
+    EngagementTemplateDocument,
+    EngagementTemplateTask,
+)
 from app.models import AuthAuditLog, AuthUser  # noqa: F401
 from app.staff_models import Department, Designation, StaffProfile, StaffSkill  # noqa: F401
 from app.workforce_models import AttendanceRecord, CapacityAssignment, LeaveRecord, StaffWorklog  # noqa: F401
