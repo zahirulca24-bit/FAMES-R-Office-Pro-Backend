@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
+from typing import Any
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -9,12 +9,21 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.responses import Response
 
 
-@dataclass(frozen=True, slots=True)
 class ApiError(Exception):
-    code: str
-    message: str
-    status_code: int = 400
-    details: dict[str, object] | None = None
+    """Structured API exception that remains compatible with Python traceback handling."""
+
+    def __init__(
+        self,
+        code: str,
+        message: str,
+        status_code: int = 400,
+        details: dict[str, object] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.message = message
+        self.status_code = status_code
+        self.details = details
 
 
 def error_response(error: ApiError, correlation_id: str) -> JSONResponse:
