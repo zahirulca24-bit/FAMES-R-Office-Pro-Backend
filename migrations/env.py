@@ -5,6 +5,13 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from app.client_lifecycle_models import (  # noqa: F401
+    ClientArchiveEvent,
+    ClientConflictCheck,
+    ClientPortfolioOwnership,
+    ClientRiskProfile,
+    ClientService,
+)
 from app.client_models import (  # noqa: F401
     Client,
     ClientAddress,
