@@ -24,6 +24,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Client lifecycle, conflict-check, risk, services and portfolio ownership
 - Real database-backed Client CRUD/search/export/activity APIs
 - Staff Master, departments, designations, reporting hierarchy and skills
+- Attendance, leave, capacity assignments and controlled worklogs
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -98,7 +99,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Head 3 — Staff, Capacity & Worklogs
 
-**Head status: [ ] IN PROGRESS**
+**Head status: [x] COMPLETE**
 
 - [x] **PR-BE-07 — Staff Master, Department, Designation & Reporting Line**
   - Staff profile
@@ -107,7 +108,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
   - Skills and employment status
   - Staff confidentiality controls
 
-- [ ] **PR-BE-08 — Attendance, Leave, Capacity, Assignment & Worklogs**
+- [x] **PR-BE-08 — Attendance, Leave, Capacity, Assignment & Worklogs**
   - Attendance and leave foundation
   - Available and assigned capacity
   - Task and engagement worklogs
@@ -116,18 +117,18 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ### Head 3 completion gate
 
-- [ ] Both PRs merged
-- [ ] Staff permissions protect sensitive staff fields
-- [ ] Capacity calculations reconcile
-- [ ] Worklog totals and locks pass
-- [ ] Attendance and leave integrity tests pass
-- [ ] Full CI green
+- [x] Both PRs merged
+- [x] Staff/workforce permission gates verified
+- [x] Capacity calculations reconcile
+- [x] Worklog totals and locks pass
+- [x] Attendance and leave integrity tests pass
+- [x] Full CI green — PR-BE-08 Backend CI run #50
 
 ---
 
 ## Head 4 — Engagement, Tasks & Operational Workflow
 
-**Head status: [ ] NOT STARTED**
+**Head status: [ ] IN PROGRESS**
 
 - [ ] **PR-BE-09 — Engagement Core, Naming Series & Team Assignment**
 - [ ] **PR-BE-10 — Engagement Templates & Automatic Task Generation**
@@ -208,7 +209,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 - [x] Head 1 — Platform Foundation & Security
 - [x] Head 2 — Client Master & Relationship Management
-- [ ] Head 3 — Staff, Capacity & Worklogs
+- [x] Head 3 — Staff, Capacity & Worklogs
 - [ ] Head 4 — Engagement, Tasks & Operational Workflow
 - [ ] Head 5 — Documents, Evidence & Working Papers
 - [ ] Head 6 — Audit Practice Engine
@@ -216,6 +217,6 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Current phase
 
-**Head 3 — Staff, Capacity & Worklogs: IN PROGRESS**
+**Head 4 — Engagement, Tasks & Operational Workflow: IN PROGRESS**
 
-Current implementation target: **PR-BE-08 — Attendance, Leave, Capacity, Assignment & Worklogs**.
+Current implementation target: **PR-BE-09 — Engagement Core, Naming Series & Team Assignment**.
