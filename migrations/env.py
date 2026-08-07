@@ -8,6 +8,14 @@ from sqlalchemy import engine_from_config, pool
 from app.config import get_settings
 from app.db import Base
 from app.models import AuthAuditLog, AuthUser  # noqa: F401
+from app.workflow_models import (  # noqa: F401
+    RecordLock,
+    WorkflowAction,
+    WorkflowDefinition,
+    WorkflowInstance,
+    WorkflowState,
+    WorkflowTransition,
+)
 
 config = context.config
 
