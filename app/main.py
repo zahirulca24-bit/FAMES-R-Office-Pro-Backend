@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.db import Base, engine
 from app.foundation.http import ApiError, CorrelationIdMiddleware, correlation_id_from_request, error_response
 from app.routers.admin import router as admin_router
+from app.routers.audit_execution import router as audit_execution_router
 from app.routers.audit_planning import router as audit_planning_router
 from app.routers.auth import router as auth_router
 from app.routers.clients import router as clients_router
@@ -22,6 +23,7 @@ from app.routers.manager import router as manager_router
 from app.routers.staff import router as staff_router
 from app.routers.workforce import router as workforce_router
 from app.routers.working_papers import router as working_papers_router
+import app.audit_execution_models  # noqa: F401
 import app.audit_models  # noqa: F401
 import app.client_lifecycle_models  # noqa: F401
 import app.client_models  # noqa: F401
@@ -79,6 +81,7 @@ app.include_router(engagement_closure_router)
 app.include_router(documents_router)
 app.include_router(working_papers_router)
 app.include_router(audit_planning_router)
+app.include_router(audit_execution_router)
 
 
 @app.get("/health")
