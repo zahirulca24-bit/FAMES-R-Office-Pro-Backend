@@ -18,6 +18,19 @@ class WorkingPaperCreateRequest(BaseModel):
         return value.strip().upper()
 
 
+class WorkingPaperUpdateRequest(BaseModel):
+    expected_version: int = Field(ge=1)
+    title: str | None = Field(default=None, min_length=2, max_length=300)
+    area: str | None = Field(default=None, max_length=100)
+    objective: str | None = None
+    conclusion: str | None = None
+
+    @field_validator("area")
+    @classmethod
+    def normalize_area(cls, value: str | None) -> str | None:
+        return value.strip().upper() if value is not None else value
+
+
 class EvidenceLinkRequest(BaseModel):
     document_id: str
     document_version_id: str
