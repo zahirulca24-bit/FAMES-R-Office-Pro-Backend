@@ -11,6 +11,7 @@ from app.db import Base, engine
 from app.foundation.http import ApiError, CorrelationIdMiddleware, correlation_id_from_request, error_response
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
+from app.routers.clients import router as clients_router
 from app.routers.manager import router as manager_router
 import app.client_lifecycle_models  # noqa: F401
 import app.client_models  # noqa: F401
@@ -67,6 +68,7 @@ async def handle_api_error(request: Request, exc: ApiError):
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(manager_router)
+app.include_router(clients_router)
 
 
 @app.get("/health")
