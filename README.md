@@ -23,6 +23,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Client Master schema and linked records
 - Client lifecycle, conflict-check, risk, services and portfolio ownership
 - Real database-backed Client CRUD/search/export/activity APIs
+- Staff Master, departments, designations, reporting hierarchy and skills
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -99,7 +100,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head status: [ ] IN PROGRESS**
 
-- [ ] **PR-BE-07 — Staff Master, Department, Designation & Reporting Line**
+- [x] **PR-BE-07 — Staff Master, Department, Designation & Reporting Line**
   - Staff profile
   - Department and designation
   - Supervisor/reporting hierarchy
@@ -217,4 +218,4 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head 3 — Staff, Capacity & Worklogs: IN PROGRESS**
 
-Current implementation target: **PR-BE-07 — Staff Master, Department, Designation & Reporting Line**.
+Current implementation target: **PR-BE-08 — Attendance, Leave, Capacity, Assignment & Worklogs**.
