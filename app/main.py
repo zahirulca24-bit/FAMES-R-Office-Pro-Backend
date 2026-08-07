@@ -12,6 +12,7 @@ from app.foundation.http import ApiError, CorrelationIdMiddleware, correlation_i
 from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.manager import router as manager_router
+import app.client_lifecycle_models  # noqa: F401
 import app.client_models  # noqa: F401
 import app.workflow_models  # noqa: F401
 
