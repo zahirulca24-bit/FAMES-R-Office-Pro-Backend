@@ -13,12 +13,14 @@ from app.routers.admin import router as admin_router
 from app.routers.auth import router as auth_router
 from app.routers.clients import router as clients_router
 from app.routers.engagements import router as engagements_router
+from app.routers.engagement_templates import router as engagement_templates_router
 from app.routers.manager import router as manager_router
 from app.routers.staff import router as staff_router
 from app.routers.workforce import router as workforce_router
 import app.client_lifecycle_models  # noqa: F401
 import app.client_models  # noqa: F401
 import app.engagement_models  # noqa: F401
+import app.engagement_template_models  # noqa: F401
 import app.staff_models  # noqa: F401
 import app.workforce_models  # noqa: F401
 import app.workflow_models  # noqa: F401
@@ -78,6 +80,7 @@ app.include_router(clients_router)
 app.include_router(staff_router)
 app.include_router(workforce_router)
 app.include_router(engagements_router)
+app.include_router(engagement_templates_router)
 
 
 @app.get("/health")
