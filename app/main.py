@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.db import Base, engine
 from app.foundation.http import ApiError, CorrelationIdMiddleware, correlation_id_from_request, error_response
 from app.routers.admin import router as admin_router
+from app.routers.audit_planning import router as audit_planning_router
 from app.routers.auth import router as auth_router
 from app.routers.clients import router as clients_router
 from app.routers.documents import router as documents_router
@@ -21,6 +22,7 @@ from app.routers.manager import router as manager_router
 from app.routers.staff import router as staff_router
 from app.routers.workforce import router as workforce_router
 from app.routers.working_papers import router as working_papers_router
+import app.audit_models  # noqa: F401
 import app.client_lifecycle_models  # noqa: F401
 import app.client_models  # noqa: F401
 import app.document_models  # noqa: F401
@@ -34,20 +36,10 @@ import app.workflow_models  # noqa: F401
 
 
 def _run_startup_bootstrap() -> None:
-    """Create/update bootstrap users only when a bootstrap password is explicitly set.
-
-    Bootstrap failures must never take the API offline. Remove bootstrap password
-    environment variables after the intended account has been created successfully.
-    """
-    if not any(
-        key.startswith("BOOTSTRAP_") and key.endswith("_PASSWORD") and value
-        for key, value in os.environ.items()
-    ):
+    if not any(key.startswith("BOOTSTRAP_") and key.endswith("_PASSWORD") and value for key, value in os.environ.items()):
         return
-
     try:
         from scripts.bootstrap_users import main as bootstrap_users
-
         bootstrap_users()
     except Exception as exc:
         print(f"STARTUP BOOTSTRAP ERROR: {type(exc).__name__}: {exc}")
@@ -66,13 +58,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="FAMES & R Office PRO API", version="0.1.0", lifespan=lifespan)
 app.add_middleware(CorrelationIdMiddleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origin_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origin_list, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
 @app.exception_handler(ApiError)
@@ -92,6 +78,7 @@ app.include_router(engagement_tasks_router)
 app.include_router(engagement_closure_router)
 app.include_router(documents_router)
 app.include_router(working_papers_router)
+app.include_router(audit_planning_router)
 
 
 @app.get("/health")
@@ -116,14 +103,5 @@ def health_ready(response: Response) -> dict[str, str]:
             connection.execute(text("SELECT 1"))
     except SQLAlchemyError:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-        return {
-            "status": "unavailable",
-            "service": "fames-r-office-pro-backend",
-            "database": "unavailable",
-        }
-
-    return {
-        "status": "ok",
-        "service": "fames-r-office-pro-backend",
-        "database": "ready",
-    }
+        return {"status": "unavailable", "service": "fames-r-office-pro-backend", "database": "unavailable"}
+    return {"status": "ok", "service": "fames-r-office-pro-backend", "database": "ready"}
