@@ -63,6 +63,7 @@ class EngagementGeneratedTask(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     engagement_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagements.id", ondelete="CASCADE"), nullable=False, index=True)
     template_task_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagement_template_tasks.id", ondelete="RESTRICT"), nullable=False)
+    parent_task_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("engagement_generated_tasks.id", ondelete="SET NULL"), nullable=True, index=True)
     task_code: Mapped[str] = mapped_column(String(60), nullable=False, index=True)
     title: Mapped[str] = mapped_column(String(250), nullable=False)
     stage: Mapped[str] = mapped_column(String(80), nullable=False, index=True)
@@ -70,9 +71,44 @@ class EngagementGeneratedTask(Base):
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
     assignment_role: Mapped[str | None] = mapped_column(String(40), nullable=True)
     approval_role: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    assignee_staff_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("staff_profiles.id", ondelete="SET NULL"), nullable=True, index=True)
+    reviewer_staff_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("staff_profiles.id", ondelete="SET NULL"), nullable=True, index=True)
+    weight_points: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    progress_percent: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     status: Mapped[str] = mapped_column(String(30), nullable=False, default="NOT_STARTED", index=True)
+    escalation_state: Mapped[str] = mapped_column(String(30), nullable=False, default="NONE", index=True)
     required: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    escalated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utcnow, onupdate=utcnow)
+
+
+class EngagementTaskDependency(Base):
+    __tablename__ = "engagement_task_dependencies"
+    __table_args__ = (UniqueConstraint("task_id", "depends_on_task_id", name="uq_engagement_task_dependency"),)
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    engagement_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagements.id", ondelete="CASCADE"), nullable=False, index=True)
+    task_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagement_generated_tasks.id", ondelete="CASCADE"), nullable=False, index=True)
+    depends_on_task_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagement_generated_tasks.id", ondelete="CASCADE"), nullable=False, index=True)
+    dependency_type: Mapped[str] = mapped_column(String(30), nullable=False, default="FINISH_TO_START")
+    created_by_user_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("auth_users.id", ondelete="SET NULL"), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utcnow)
+
+
+class EngagementTaskStatusHistory(Base):
+    __tablename__ = "engagement_task_status_history"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    task_id: Mapped[str] = mapped_column(String(36), ForeignKey("engagement_generated_tasks.id", ondelete="CASCADE"), nullable=False, index=True)
+    from_status: Mapped[str] = mapped_column(String(30), nullable=False)
+    to_status: Mapped[str] = mapped_column(String(30), nullable=False)
+    reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    actor_user_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("auth_users.id", ondelete="SET NULL"), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=utcnow, index=True)
 
 
 class EngagementRequiredDocument(Base):
