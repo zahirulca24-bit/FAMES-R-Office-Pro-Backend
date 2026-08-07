@@ -5,6 +5,16 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from app.client_models import (  # noqa: F401
+    Client,
+    ClientAddress,
+    ClientContact,
+    ClientDirector,
+    ClientIdentifier,
+    ClientRelationship,
+    ClientShareholder,
+    ClientStatusHistory,
+)
 from app.config import get_settings
 from app.db import Base
 from app.models import AuthAuditLog, AuthUser  # noqa: F401
