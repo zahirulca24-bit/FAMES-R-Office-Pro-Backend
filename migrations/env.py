@@ -14,6 +14,7 @@ from app.document_models import Document, DocumentAccessLog, DocumentVersion  # 
 from app.engagement_closure_models import EngagementReviewAction  # noqa: F401
 from app.engagement_models import Engagement, EngagementNumberSequence, EngagementTeamMember  # noqa: F401
 from app.engagement_template_models import EngagementGeneratedTask, EngagementRequiredDocument, EngagementTaskDependency, EngagementTaskStatusHistory, EngagementTemplate, EngagementTemplateDocument, EngagementTemplateTask  # noqa: F401
+from app.finance_models import EngagementExpense, FinanceAction, FinanceInvoice, FinanceReceipt  # noqa: F401
 from app.models import AuthAuditLog, AuthUser  # noqa: F401
 from app.staff_models import Department, Designation, StaffProfile, StaffSkill  # noqa: F401
 from app.workforce_models import AttendanceRecord, CapacityAssignment, LeaveRecord, StaffWorklog  # noqa: F401
