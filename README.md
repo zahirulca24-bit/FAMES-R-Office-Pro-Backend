@@ -33,6 +33,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Working papers with evidence linkage, review notes, sign-off history and locked-file immutability
 - Audit acceptance, independence, materiality, risk register and risk-to-procedure planning controls
 - Audit requisitions, testing, issues, completion readiness and final audit-file locking
+- Fees, invoices, receipts, engagement expenses and engagement economics reconciliation
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -110,18 +111,7 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 **Head status: [x] COMPLETE**
 
 - [x] **PR-BE-07 — Staff Master, Department, Designation & Reporting Line**
-  - Staff profile
-  - Department and designation
-  - Supervisor/reporting hierarchy
-  - Skills and employment status
-  - Staff confidentiality controls
-
 - [x] **PR-BE-08 — Attendance, Leave, Capacity, Assignment & Worklogs**
-  - Attendance and leave foundation
-  - Available and assigned capacity
-  - Task and engagement worklogs
-  - Billable/non-billable classification
-  - Timesheet review and locking
 
 ### Head 3 completion gate
 
@@ -197,14 +187,14 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head status: [ ] IN PROGRESS**
 
-- [ ] **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**
+- [x] **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**
 - [ ] **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**
 
 ### Head 7 completion gate
 
 - [ ] Both PRs merged
-- [ ] Invoice, receipt and outstanding balances reconcile
-- [ ] Engagement profitability reconciles
+- [x] Invoice, receipt and outstanding balances reconcile
+- [x] Engagement profitability reconciles
 - [ ] Dashboard data matches source records
 - [ ] Notification triggers pass
 - [ ] Backup and restore test succeeds
@@ -227,4 +217,4 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 **Head 7 — Finance, Reporting & Production Hardening: IN PROGRESS**
 
-Current implementation target: **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**.
+Current implementation target: **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**.
