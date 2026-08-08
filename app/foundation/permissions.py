@@ -34,6 +34,8 @@ class Permission(StrEnum):
 
     AUDIT_PLAN = "audit.plan"
     AUDIT_APPROVE = "audit.approve"
+    AUDIT_EXECUTE = "audit.execute"
+    AUDIT_FINALIZE = "audit.finalize"
 
     FINANCE_VIEW = "finance.view"
     FINANCE_INVOICE_CREATE = "finance.invoice.create"
@@ -63,7 +65,7 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             Permission.ENGAGEMENT_VIEW, Permission.ENGAGEMENT_CREATE, Permission.ENGAGEMENT_ASSIGN, Permission.ENGAGEMENT_APPROVE, Permission.ENGAGEMENT_CLOSE, Permission.ENGAGEMENT_REOPEN,
             Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.DOCUMENT_ARCHIVE,
             Permission.WORKING_PAPER_REVIEW, Permission.WORKING_PAPER_APPROVE, Permission.WORKING_PAPER_LOCK,
-            Permission.AUDIT_PLAN, Permission.AUDIT_APPROVE,
+            Permission.AUDIT_PLAN, Permission.AUDIT_APPROVE, Permission.AUDIT_EXECUTE, Permission.AUDIT_FINALIZE,
             Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_APPROVE, Permission.FINANCE_RECEIPT_RECORD,
             Permission.ADMIN_AUDIT_LOG_VIEW,
         }),
@@ -75,21 +77,21 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             Permission.ENGAGEMENT_VIEW, Permission.ENGAGEMENT_CREATE, Permission.ENGAGEMENT_ASSIGN,
             Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.DOCUMENT_ARCHIVE,
             Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT, Permission.WORKING_PAPER_REVIEW,
-            Permission.AUDIT_PLAN,
+            Permission.AUDIT_PLAN, Permission.AUDIT_EXECUTE,
             Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_CREATE, Permission.FINANCE_RECEIPT_RECORD,
         }),
     ),
     "REVIEWER": RoleDefinition(
         "REVIEWER",
-        frozenset({Permission.CLIENT_VIEW, Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.WORKING_PAPER_REVIEW, Permission.AUDIT_PLAN}),
+        frozenset({Permission.CLIENT_VIEW, Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.WORKING_PAPER_REVIEW, Permission.AUDIT_PLAN, Permission.AUDIT_EXECUTE}),
     ),
     "STAFF": RoleDefinition(
         "STAFF",
-        frozenset({Permission.CLIENT_VIEW, Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT}),
+        frozenset({Permission.CLIENT_VIEW, Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT, Permission.AUDIT_EXECUTE}),
     ),
     "STUDENT": RoleDefinition(
         "STUDENT",
-        frozenset({Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT}),
+        frozenset({Permission.ENGAGEMENT_VIEW, Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT, Permission.AUDIT_EXECUTE}),
     ),
     "CLIENT_PORTAL_USER": RoleDefinition("CLIENT_PORTAL_USER", frozenset()),
 }
