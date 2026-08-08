@@ -32,6 +32,7 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Private document storage, version history, integrity hashes and access logs
 - Working papers with evidence linkage, review notes, sign-off history and locked-file immutability
 - Audit acceptance, independence, materiality, risk register and risk-to-procedure planning controls
+- Audit requisitions, testing, issues, completion readiness and final audit-file locking
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -175,26 +176,26 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Head 6 — Audit Practice Engine
 
-**Head status: [ ] IN PROGRESS**
+**Head status: [x] COMPLETE**
 
 - [x] **PR-BE-15 — Audit Planning, Acceptance, Independence, Materiality & Risk**
-- [ ] **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**
+- [x] **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**
 
 ### Head 6 completion gate
 
-- [ ] Both PRs merged
+- [x] Both PRs merged
 - [x] Acceptance and independence gates pass
 - [x] Risk-to-procedure linkage is complete
-- [ ] Requisition trail is traceable
-- [ ] Open high-risk issues block finalization
-- [ ] Complete audit file can be locked
-- [ ] Full CI green
+- [x] Requisition trail is traceable
+- [x] Open high-risk issues block finalization
+- [x] Complete audit file can be locked
+- [x] Full CI green — PR-BE-16 Backend CI run #74
 
 ---
 
 ## Head 7 — Finance, Reporting & Production Hardening
 
-**Head status: [ ] NOT STARTED**
+**Head status: [ ] IN PROGRESS**
 
 - [ ] **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**
 - [ ] **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**
@@ -219,11 +220,11 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 - [x] Head 3 — Staff, Capacity & Worklogs
 - [x] Head 4 — Engagement, Tasks & Operational Workflow
 - [x] Head 5 — Documents, Evidence & Working Papers
-- [ ] Head 6 — Audit Practice Engine
+- [x] Head 6 — Audit Practice Engine
 - [ ] Head 7 — Finance, Reporting & Production Hardening
 
 ## Current phase
 
-**Head 6 — Audit Practice Engine: IN PROGRESS**
+**Head 7 — Finance, Reporting & Production Hardening: IN PROGRESS**
 
-Current implementation target: **PR-BE-16 — Requisition, Testing, Issues, Completion & Finalization**.
+Current implementation target: **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**.
