@@ -37,6 +37,7 @@ def test_invoice_receipt_expense_and_economics_reconcile():
     client_id = str(uuid.uuid4())
     engagement_id = str(uuid.uuid4())
     with SessionLocal() as db:
+        db.merge(_super_admin())
         db.add(
             Client(
                 id=client_id,
@@ -141,4 +142,5 @@ def test_invoice_receipt_expense_and_economics_reconcile():
             db.execute(delete(FinanceInvoice).where(FinanceInvoice.engagement_id == engagement_id))
             db.execute(delete(Engagement).where(Engagement.id == engagement_id))
             db.execute(delete(Client).where(Client.id == client_id))
+            db.execute(delete(AuthUser).where(AuthUser.id == "test-finance-super-admin"))
             db.commit()
