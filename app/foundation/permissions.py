@@ -41,6 +41,7 @@ class Permission(StrEnum):
     FINANCE_INVOICE_CREATE = "finance.invoice.create"
     FINANCE_INVOICE_APPROVE = "finance.invoice.approve"
     FINANCE_RECEIPT_RECORD = "finance.receipt.record"
+    FINANCE_EXPENSE_RECORD = "finance.expense.record"
 
     ADMIN_USER_MANAGE = "admin.user.manage"
     ADMIN_ROLE_MANAGE = "admin.role.manage"
@@ -66,7 +67,7 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.DOCUMENT_ARCHIVE,
             Permission.WORKING_PAPER_REVIEW, Permission.WORKING_PAPER_APPROVE, Permission.WORKING_PAPER_LOCK,
             Permission.AUDIT_PLAN, Permission.AUDIT_APPROVE, Permission.AUDIT_EXECUTE, Permission.AUDIT_FINALIZE,
-            Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_APPROVE, Permission.FINANCE_RECEIPT_RECORD,
+            Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_APPROVE, Permission.FINANCE_RECEIPT_RECORD, Permission.FINANCE_EXPENSE_RECORD,
             Permission.ADMIN_AUDIT_LOG_VIEW,
         }),
     ),
@@ -78,7 +79,7 @@ ROLE_PERMISSIONS: dict[str, RoleDefinition] = {
             Permission.DOCUMENT_VIEW, Permission.DOCUMENT_UPLOAD, Permission.DOCUMENT_VERSION, Permission.DOCUMENT_ARCHIVE,
             Permission.WORKING_PAPER_PREPARE, Permission.WORKING_PAPER_SUBMIT, Permission.WORKING_PAPER_REVIEW,
             Permission.AUDIT_PLAN, Permission.AUDIT_EXECUTE,
-            Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_CREATE, Permission.FINANCE_RECEIPT_RECORD,
+            Permission.FINANCE_VIEW, Permission.FINANCE_INVOICE_CREATE, Permission.FINANCE_RECEIPT_RECORD, Permission.FINANCE_EXPENSE_RECORD,
         }),
     ),
     "REVIEWER": RoleDefinition(
