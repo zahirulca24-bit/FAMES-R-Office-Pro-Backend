@@ -21,6 +21,7 @@ from app.routers.engagement_tasks import router as engagement_tasks_router
 from app.routers.engagement_templates import router as engagement_templates_router
 from app.routers.finance import router as finance_router
 from app.routers.manager import router as manager_router
+from app.routers.operations import router as operations_router
 from app.routers.staff import router as staff_router
 from app.routers.workforce import router as workforce_router
 from app.routers.working_papers import router as working_papers_router
@@ -33,6 +34,7 @@ import app.engagement_closure_models  # noqa: F401
 import app.engagement_models  # noqa: F401
 import app.engagement_template_models  # noqa: F401
 import app.finance_models  # noqa: F401
+import app.operations_models  # noqa: F401
 import app.staff_models  # noqa: F401
 import app.workforce_models  # noqa: F401
 import app.working_paper_models  # noqa: F401
@@ -85,6 +87,7 @@ app.include_router(working_papers_router)
 app.include_router(audit_planning_router)
 app.include_router(audit_execution_router)
 app.include_router(finance_router)
+app.include_router(operations_router)
 
 
 @app.get("/health")
