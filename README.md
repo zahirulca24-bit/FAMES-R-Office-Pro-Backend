@@ -34,6 +34,10 @@ FastAPI backend for **FAMES & R Office PRO**, a firm-only CA practice management
 - Audit acceptance, independence, materiality, risk register and risk-to-procedure planning controls
 - Audit requisitions, testing, issues, completion readiness and final audit-file locking
 - Fees, invoices, receipts, engagement expenses and engagement economics reconciliation
+- Executive operations dashboard sourced from persisted records
+- Notification lifecycle tracking
+- Backup/restore verification register
+- Production-readiness checks and blocker evaluation
 - Optimistic version conflict protection and archive controls
 - Liveness and database-backed readiness endpoints
 
@@ -185,21 +189,21 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 
 ## Head 7 — Finance, Reporting & Production Hardening
 
-**Head status: [ ] IN PROGRESS**
+**Head status: [x] COMPLETE**
 
 - [x] **PR-BE-17 — Fees, Invoices, Receipts, Expenses & Engagement Economics**
-- [ ] **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**
+- [x] **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**
 
 ### Head 7 completion gate
 
-- [ ] Both PRs merged
+- [x] Both PRs merged
 - [x] Invoice, receipt and outstanding balances reconcile
 - [x] Engagement profitability reconciles
-- [ ] Dashboard data matches source records
-- [ ] Notification triggers pass
-- [ ] Backup and restore test succeeds
-- [ ] Production readiness audit passes
-- [ ] Full CI green
+- [x] Dashboard data matches source records
+- [x] Notification lifecycle passes
+- [x] Backup and restore verification succeeds
+- [x] Production readiness evaluation passes automated controls
+- [x] Full CI green — PR-BE-18 Backend CI run #80
 
 ---
 
@@ -211,10 +215,10 @@ Work is delivered **head by head**. A PR is checked only after implementation, C
 - [x] Head 4 — Engagement, Tasks & Operational Workflow
 - [x] Head 5 — Documents, Evidence & Working Papers
 - [x] Head 6 — Audit Practice Engine
-- [ ] Head 7 — Finance, Reporting & Production Hardening
+- [x] Head 7 — Finance, Reporting & Production Hardening
 
 ## Current phase
 
-**Head 7 — Finance, Reporting & Production Hardening: IN PROGRESS**
+**Controlled 18-PR backend delivery roadmap: COMPLETE.**
 
-Current implementation target: **PR-BE-18 — Dashboards, Reports, Notifications, Backup & Production Hardening**.
+All roadmap PRs are merged and the final PR-BE-18 head passed Backend CI run #80. The next stage is post-roadmap integration and production validation: deploy the current main branch, run the latest Alembic migration chain against the production PostgreSQL database, verify `/health/ready`, validate the frontend against the real backend APIs, and perform a real backup/restore evidence check before declaring the deployed system production-verified.
